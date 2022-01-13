@@ -1,1 +1,1 @@
-# few_shot_learning_for_low_data_drug_discovery
+# Few Shot Learning For Low Data Drug Discovery
