@@ -1,0 +1,326 @@
+\chapter{Results}
+
+\section{Few-Shot Learning on Tox21}
+\label{tox21results}
+
+\subsection{SR-HSE - 372 Actives - 6,095 Inactives}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{TOX21} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{SR-HSE} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & 0.563 ± 0.030 & 0.572 ± 0.049 & 0.780 ± 0.028 & \textbf{0.793 ± 0.002} & 0.782 ± 0.017 & 0.774 ± 0.004 \\ & PRC & 0.078 ± 0.014 & 0.080 ± 0.022 & 0.133 ± 0.020 & \textbf{0.272 ± 0.015} & 0.271 ± 0.055 & 0.271 ± 0.021\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & 0.546 ± 0.035 & 0.565 ± 0.047 & 0.777 ± 0.067 & 0.778 ± 0.002 & 0.772 ± 0.013 & \textbf{0.791 ± 0.003} \\ & PRC & 0.074 ± 0.013 & 0.085 ± 0.020 & 0.117 ± 0.034 & 0.266 ± 0.012 & 0.278 ± 0.045 & \textbf{0.280 ± 0.031}\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & 0.518 ± 0.036 & 0.540 ± 0.058 & 0.778 ± 0.168 & \textbf{0.788 ± 0.001} & 0.780 ± 0.003 & 0.776 ± 0.001 \\ & PRC & 0.064 ± 0.009 & 0.075 ± 0.019 & 0.052 ± 0.047 & 0.208 ± 0.007 & \textbf{0.283 ± 0.016} & 0.243 ± 0.007\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & 0.515 ± 0.044 & 0.503 ± 0.061 & 0.801 ± 0.162 & 0.775 ± 0.002 & 0.773 ± 0.005 & \textbf{0.789 ± 0.001} \\ & PRC & 0.064 ± 0.010 & 0.064 ± 0.013 & 0.064 ± 0.041 & 0.235 ± 0.017 & \textbf{0.270 ± 0.018} & 0.229 ± 0.005\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.521 ± 0.045 & 0.520 ± 0.066 & 0.769 ± 0.084 & 0.770 ± 0.006 & \textbf{0.779 ± 0.007} & 0.772 ± 0.001 \\ & PRC & 0.066 ± 0.009 & 0.066 ± 0.015 & 0.125 ± 0.059 & 0.230 ± 0.024 & 0.266 ± 0.029 & \textbf{0.274 ± 0.008}\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for TOX21 SR-HSE Target.]{ROC-AUC and PR-AUC Scores for ML Models on TOX21 SR-HSE Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:TOX21-SR-HSE}
+\end{table*}
+
+\subsection{SR-MMP - 918 Actives - 4,892 Inactives}
+ 
+    \begin{table*}[h]
+    \centering
+    \ra{1.3}
+    {\renewcommand{\arraystretch}{1}}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}cccccccc@{}}
+    \toprule
+    \textbf{TOX21} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{SR-MMP} \\
+    \midrule
+    \multirow{ 2}{*}{10+/10-} & ROC & 0.679 ± 0.047 & 0.654 ± 0.068 & 0.860 ± 0.025 & 0.844 ± 0.005 & \textbf{0.845 ± 0.015} & 0.842 ± 0.007 \\ & PRC & 0.296 ± 0.052 & 0.270 ± 0.066 & 0.371 ± 0.029 & \textbf{0.511 ± 0.017} & 0.510 ± 0.032 & 0.496 ± 0.023\\
+    \midrule
+    \multirow{ 2}{*}{5+/10-} & ROC & 0.647 ± 0.055 & 0.652 ± 0.056 & 0.858 ± 0.055 & \textbf{0.853 ± 0.007} & 0.846 ± 0.014 & 0.842 ± 0.007 \\ & PRC & 0.268 ± 0.044 & 0.273 ± 0.059 & 0.303 ± 0.064 & 0.519 ± 0.031 & \textbf{0.527 ± 0.029} & 0.494 ± 0.038\\
+    \midrule
+    \multirow{ 2}{*}{1+/10-} & ROC & 0.613 ± 0.063 & 0.587 ± 0.081 & 0.876 ± 0.068 & 0.842 ± 0.002 & \textbf{0.849 ± 0.005} & 0.844 ± 0.002 \\ & PRC & 0.236 ± 0.054 & 0.221 ± 0.050 & 0.158 ± 0.124 & 0.444 ± 0.005 & \textbf{0.508 ± 0.025} & 0.470 ± 0.011\\
+    \midrule
+    \multirow{ 2}{*}{1+/5-} & ROC & 0.539 ± 0.078 & 0.592 ± 0.095 & 0.815 ± 0.172 & \textbf{0.853 ± 0.001} & 0.846 ± 0.005 & 0.846 ± 0.001 \\ & PRC & 0.188 ± 0.035 & 0.226 ± 0.059 & 0.179 ± 0.099 & 0.499 ± 0.011 & \textbf{0.508 ± 0.025} & 0.470 ± 0.007\\
+    \midrule
+    \multirow{ 2}{*}{1+/1-} & ROC & 0.580 ± 0.060 & 0.572 ± 0.128 & 0.845 ± 0.055 & \textbf{0.851 ± 0.008} & 0.847 ± 0.003 & 0.840 ± 0.004 \\ & PRC & 0.209 ± 0.034 & 0.219 ± 0.075 & 0.311 ± 0.084 & \textbf{0.511 ± 0.037} & 0.506 ± 0.018 & 0.471 ± 0.022\\
+    \bottomrule
+    \end{tabular}
+    }
+    \caption[ROC-AUC and PR-AUC Scores for TOX21 SR-MMP Target.]{ROC-AUC and PR-AUC Scores for ML Models on TOX21 SR-MMP Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+    \label{table:TOX21-SR-MMP}
+    \end{table*}
+    
+\subsection{SR-p53 - 423 Actives - 6,351 Inactives}
+     
+    \begin{table*}[h]
+    \centering
+    \ra{1.3}
+    {\renewcommand{\arraystretch}{1}}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}cccccccc@{}}
+    \toprule
+    \textbf{TOX21} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{SR-p53} \\
+    \midrule
+    \multirow{ 2}{*}{10+/10-} & ROC & 0.610 ± 0.033 & 0.635 ± 0.048 & 0.835 ± 0.029 & 0.834 ± 0.003 & \textbf{0.850 ± 0.004} & 0.826 ± 0.011 \\ & PRC & 0.101 ± 0.011 & 0.101 ± 0.022 & 0.172 ± 0.027 & 0.317 ± 0.007 & \textbf{0.369 ± 0.027} & 0.313 ± 0.039\\
+    \midrule
+    \multirow{ 2}{*}{5+/10-} & ROC & 0.614 ± 0.033 & 0.614 ± 0.054 & 0.848 ± 0.060 & 0.842 ± 0.003 & \textbf{0.852 ± 0.009} & 0.834 ± 0.002 \\ & PRC & 0.102 ± 0.014 & 0.098 ± 0.023 & 0.151 ± 0.045 & 0.323 ± 0.014 & \textbf{0.358 ± 0.042} & 0.291 ± 0.028\\
+    \midrule
+    \multirow{ 2}{*}{1+/10-} & ROC & 0.558 ± 0.069 & 0.548 ± 0.083 & 0.855 ± 0.148 & 0.837 ± 0.001 & \textbf{0.848 ± 0.005} & 0.824 ± 0.001 \\ & PRC & 0.084 ± 0.019 & 0.081 ± 0.023 & 0.088 ± 0.061 & 0.249 ± 0.004 & \textbf{0.361 ± 0.030} & 0.262 ± 0.007\\
+    \midrule
+    \multirow{ 2}{*}{1+/5-} & ROC & 0.548 ± 0.070 & 0.582 ± 0.088 & 0.805 ± 0.154 & 0.833 ± 0.001 & \textbf{0.840 ± 0.005} & 0.822 ± 0.001 \\ & PRC & 0.083 ± 0.022 & 0.093 ± 0.028 & 0.076 ± 0.057 & 0.283 ± 0.012 & \textbf{0.310 ± 0.023} & 0.257 ± 0.003\\
+    \midrule
+    \multirow{ 2}{*}{1+/1-} & ROC & 0.549 ± 0.064 & 0.553 ± 0.103 & 0.840 ± 0.061 & \textbf{0.838 ± 0.004} & 0.834 ± 0.003 & 0.827 ± 0.001 \\ & PRC & 0.079 ± 0.016 & 0.085 ± 0.027 & 0.160 ± 0.046 & 0.316 ± 0.022 & \textbf{0.346 ± 0.021} & 0.279 ± 0.015\\
+    \bottomrule
+    \end{tabular}
+    }
+    \caption[ROC-AUC and PR-AUC Scores for TOX21 SR-p53 Target.]{ROC-AUC and PR-AUC Scores for ML Models on TOX21 SR-p53 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+    \label{table:TOX21-SR-p53}
+    \end{table*}
+
+\section{Few-Shot Learning on MUV}
+\label{muvresults}
+
+\subsection{MUV-832 - 30 Actives - 14,637 Decoys}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{MUV} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{MUV-832} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & \textbf{0.824 ± 0.068} & 0.753 ± 0.073 & 0.608 ± 0.019 & 0.720 ± 0.043 & 0.585 ± 0.041 & 0.566 ± 0.050 \\ & PRC & \textbf{0.069 ± 0.047} & 0.006 ± 0.004 & 0.001 ± 0.000 & 0.005 ± 0.001 & 0.004 ± 0.003 & 0.003 ± 0.001\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & \textbf{0.747 ± 0.072} & 0.683 ± 0.080 & 0.561 ± 0.039 & 0.651 ± 0.031 & 0.656 ± 0.021 & 0.561 ± 0.105 \\ & PRC & \textbf{0.122 ± 0.058} & 0.012 ± 0.017 & 0.001 ± 0.002 & 0.008 ± 0.001 & 0.007 ± 0.001 & 0.003 ± 0.001\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & 0.601 ± 0.060 & 0.556 ± 0.076 & 0.722 ± 0.136 & 0.615 ± 0.026 & 0.607 ± 0.014 & \textbf{0.683 ± 0.010} \\ & PRC & \textbf{0.035 ± 0.034} & 0.007 ± 0.009 & 0.003 ± 0.004 & 0.004 ± 0.001 & 0.006 ± 0.000 & 0.007 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & \textbf{0.579 ± 0.071} & 0.551 ± 0.115 & 0.773 ± 0.084 & 0.514 ± 0.012 & 0.570 ± 0.021 & 0.500 ± 0.000 \\ & PRC & \textbf{0.036 ± 0.033} & 0.005 ± 0.003 & 0.003 ± 0.003 & 0.003 ± 0.000 & 0.004 ± 0.001 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & \textbf{0.582 ± 0.089} & 0.567 ± 0.155 & 0.768 ± 0.079 & 0.496 ± 0.028 & 0.517 ± 0.010 & 0.577 ± 0.011 \\ & PRC & \textbf{0.039 ± 0.038} & 0.006 ± 0.009 & 0.005 ± 0.003 & 0.003 ± 0.000 & 0.005 ± 0.001 & 0.004 ± 0.000\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for MUV MUV-832 Target.]{ROC-AUC and PR-AUC Scores for ML Models on MUV MUV-832 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:MUV-MUV-832}
+\end{table*}
+
+\subsection{MUV-846 - 30 Actives - 14,681 Decoys}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{MUV} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{MUV-846} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & \textbf{0.876 ± 0.048} & 0.849 ± 0.045 & 0.594 ± 0.024 & 0.715 ± 0.048 & 0.719 ± 0.036 & 0.482 ± 0.035 \\ & PRC & \textbf{0.115 ± 0.053} & 0.025 ± 0.019 & 0.001 ± 0.000 & 0.022 ± 0.012 & 0.003 ± 0.001 & 0.001 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & \textbf{0.833 ± 0.042} & 0.754 ± 0.065 & 0.555 ± 0.056 & 0.453 ± 0.024 & 0.560 ± 0.033 & 0.549 ± 0.047 \\ & PRC & \textbf{0.088 ± 0.055} & 0.038 ± 0.029 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & \textbf{0.676 ± 0.104} & 0.656 ± 0.123 & 0.711 ± 0.104 & 0.437 ± 0.026 & 0.490 ± 0.017 & 0.556 ± 0.008 \\ & PRC & \textbf{0.024 ± 0.031} & 0.012 ± 0.012 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & 0.661 ± 0.093 & \textbf{0.690 ± 0.124} & 0.688 ± 0.171 & 0.388 ± 0.011 & 0.441 ± 0.012 & 0.500 ± 0.000 \\ & PRC & \textbf{0.039 ± 0.034} & 0.014 ± 0.013 & 0.001 ± 0.001 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.624 ± 0.123 & \textbf{0.642 ± 0.159} & 0.647 ± 0.094 & 0.518 ± 0.029 & 0.456 ± 0.025 & 0.490 ± 0.008 \\ & PRC & \textbf{0.031 ± 0.040} & 0.011 ± 0.010 & 0.009 ± 0.021 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for MUV MUV-846 Target.]{ROC-AUC and PR-AUC Scores for ML Models on MUV MUV-846 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:MUV-MUV-846}
+\end{table*}
+
+\subsection{MUV-852 - 29 Actives - 14,622 Decoys}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{MUV} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{MUV-852} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & 0.790 ± 0.048 & \textbf{0.803 ± 0.054} & 0.574 ± 0.019 & 0.647 ± 0.035 & 0.639 ± 0.052 & 0.515 ± 0.042 \\ & PRC & \textbf{0.137 ± 0.086} & 0.010 ± 0.004 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.001\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & \textbf{0.787 ± 0.041} & 0.779 ± 0.031 & 0.612 ± 0.031 & 0.564 ± 0.033 & 0.592 ± 0.032 & 0.453 ± 0.026 \\ & PRC & \textbf{0.130 ± 0.093} & 0.021 ± 0.023 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & \textbf{0.665 ± 0.103} & 0.654 ± 0.156 & 0.741 ± 0.129 & 0.556 ± 0.020 & 0.591 ± 0.022 & 0.594 ± 0.008 \\ & PRC & \textbf{0.036 ± 0.044} & 0.007 ± 0.005 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.003 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & \textbf{0.639 ± 0.145} & 0.607 ± 0.168 & 0.665 ± 0.126 & 0.485 ± 0.020 & 0.523 ± 0.017 & 0.500 ± 0.000 \\ & PRC & \textbf{0.052 ± 0.062} & 0.007 ± 0.006 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.621 ± 0.114 & \textbf{0.674 ± 0.174} & 0.673 ± 0.099 & 0.462 ± 0.014 & 0.506 ± 0.020 & 0.510 ± 0.008 \\ & PRC & \textbf{0.034 ± 0.050} & 0.007 ± 0.005 & 0.006 ± 0.011 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for MUV MUV-852 Target.]{ROC-AUC and PR-AUC Scores for ML Models on MUV MUV-852 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:MUV-MUV-852}
+\end{table*}
+
+\subsection{MUV-858 - 29 Actives - 14,745 Decoys}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{MUV} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{MUV-858} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & 0.609 ± 0.079 & \textbf{0.644 ± 0.071} & 0.533 ± 0.031 & 0.545 ± 0.057 & 0.539 ± 0.041 & 0.489 ± 0.052 \\ & PRC & \textbf{0.004 ± 0.003} & 0.003 ± 0.001 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.001 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & 0.573 ± 0.070 & \textbf{0.598 ± 0.054} & 0.529 ± 0.036 & 0.446 ± 0.036 & 0.562 ± 0.026 & 0.469 ± 0.026 \\ & PRC & \textbf{0.011 ± 0.013} & 0.003 ± 0.002 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & 0.537 ± 0.058 & \textbf{0.556 ± 0.052} & 0.527 ± 0.162 & 0.405 ± 0.009 & 0.488 ± 0.014 & 0.477 ± 0.008 \\ & PRC & \textbf{0.005 ± 0.008} & 0.003 ± 0.001 & 0.000 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & 0.534 ± 0.065 & \textbf{0.550 ± 0.071} & 0.514 ± 0.140 & 0.440 ± 0.016 & 0.482 ± 0.014 & 0.500 ± 0.000 \\ & PRC & \textbf{0.005 ± 0.008} & 0.003 ± 0.002 & 0.001 ± 0.001 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.521 ± 0.065 & 0.505 ± 0.069 & 0.558 ± 0.103 & \textbf{0.554 ± 0.017} & 0.526 ± 0.014 & 0.437 ± 0.014 \\ & PRC & 0.002 ± 0.001 & \textbf{0.003 ± 0.001} & 0.002 ± 0.001 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for MUV MUV-858 Target.]{ROC-AUC and PR-AUC Scores for ML Models on MUV MUV-858 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:MUV-MUV-858}
+\end{table*}
+
+
+\subsection{MUV-859 - 24 Actives - 14,722 Decoys}
+ 
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{MUV} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{MUV-859} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & \textbf{0.539 ± 0.077} & 0.517 ± 0.057 & 0.499 ± 0.018 & 0.516 ± 0.042 & 0.513 ± 0.041 & 0.398 ± 0.053 \\ & PRC & \textbf{0.003 ± 0.005} & 0.001 ± 0.000 & 0.001 ± 0.000 & 0.001 ± 0.000 & 0.001 ± 0.000 & 0.001 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & \textbf{0.538 ± 0.066} & 0.515 ± 0.067 & 0.492 ± 0.020 & 0.464 ± 0.023 & 0.510 ± 0.024 & 0.481 ± 0.052 \\ & PRC & 0.002 ± 0.001 & 0.002 ± 0.001 & 0.000 ± 0.000 & 0.001 ± 0.000 & 0.001 ± 0.000 & \textbf{0.005 ± 0.004}\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & 0.517 ± 0.081 & 0.504 ± 0.060 & 0.539 ± 0.109 & 0.446 ± 0.015 & \textbf{0.522 ± 0.011} & 0.427 ± 0.014 \\ & PRC & \textbf{0.002 ± 0.001} & 0.002 ± 0.000 & 0.000 ± 0.000 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.001 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & 0.524 ± 0.064 & \textbf{0.527 ± 0.057} & 0.426 ± 0.121 & 0.480 ± 0.013 & 0.453 ± 0.013 & 0.500 ± 0.000 \\ & PRC & 0.002 ± 0.001 & \textbf{0.002 ± 0.002} & 0.000 ± 0.000 & 0.002 ± 0.000 & 0.001 ± 0.000 & 0.002 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.517 ± 0.064 & 0.499 ± 0.061 & 0.455 ± 0.072 & 0.504 ± 0.016 & \textbf{0.522 ± 0.009} & 0.406 ± 0.014 \\ & PRC & \textbf{0.002 ± 0.001} & 0.002 ± 0.001 & 0.001 ± 0.000 & 0.002 ± 0.000 & 0.002 ± 0.000 & 0.001 ± 0.000\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for MUV MUV-859 Target.]{ROC-AUC and PR-AUC Scores for ML Models on MUV MUV-859 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:MUV-MUV-859}
+\end{table*}
+
+\section{Few-Shot Learning on DUD-E GPCR Subset}
+\label{duderesults}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{DUD-E GPCR} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{adrb2} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & 0.969 ± 0.018 & 0.914 ± 0.038 & 0.998 ± 0.000 & \textbf{1.000 ± 0.000} & \textbf{1.000 ± 0.000} & 0.998 ± 0.001 \\ & PRC & 0.806 ± 0.103 & 0.311 ± 0.099 & 0.963 ± 0.014 & 0.986 ± 0.002 & \textbf{0.997 ± 0.001} & 0.991 ± 0.002\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & 0.948 ± 0.022 & 0.875 ± 0.043 & 0.998 ± 0.005 & 0.996 ± 0.000 & \textbf{1.000 ± 0.000} & 0.998 ± 0.001 \\ & PRC & 0.729 ± 0.088 & 0.230 ± 0.102 & 0.959 ± 0.047 & 0.982 ± 0.003 & \textbf{0.996 ± 0.001} & 0.985 ± 0.001\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & 0.842 ± 0.055 & 0.748 ± 0.072 & 0.998 ± 0.001 & \textbf{0.999 ± 0.000} & 0.998 ± 0.000 & 0.998 ± 0.000 \\ & PRC & 0.339 ± 0.135 & 0.099 ± 0.056 & 0.909 ± 0.117 & \textbf{0.975 ± 0.002} & 0.966 ± 0.009 & 0.974 ± 0.000\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & 0.842 ± 0.088 & 0.744 ± 0.080 & 0.998 ± 0.000 & 0.995 ± 0.000 & 0.996 ± 0.000 & \textbf{0.997 ± 0.000} \\ & PRC & 0.339 ± 0.142 & 0.095 ± 0.059 & 0.913 ± 0.131 & 0.953 ± 0.005 & \textbf{0.993 ± 0.001} & 0.917 ± 0.005\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & 0.776 ± 0.122 & 0.731 ± 0.088 & 0.998 ± 0.001 & 0.996 ± 0.000 & 0.997 ± 0.000 & \textbf{0.998 ± 0.000} \\ & PRC & 0.227 ± 0.180 & 0.058 ± 0.032 & 0.909 ± 0.052 & 0.981 ± 0.003 & \textbf{0.982 ± 0.006} & 0.964 ± 0.002\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for DUD-E GPCR adrb2 Target.]{ROC-AUC and PR-AUC Scores for ML Models on DUD-E GPCR adrb2 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:DUD-E_GPCR-adrb2}
+\end{table*}
+
+\begin{table*}[h]
+\centering
+\ra{1.3}
+{\renewcommand{\arraystretch}{1}}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}cccccccc@{}}
+\toprule
+\textbf{DUD-E GPCR} & \multirow{ 2}{*}{\textbf{Metric}} & \multirow{ 2}{*}{\textbf{RF}} & \multirow{ 2}{*}{\textbf{Graph Conv}} & \multirow{ 2}{*}{\textbf{SiameseNet}} & \multirow{ 2}{*}{\textbf{MatchingNet}} & \multirow{ 2}{*}{\textbf{ProtoNet}} & \multirow{ 2}{*}{\textbf{RelationNet}} \\ \textbf{cxcr4} \\
+\midrule
+\multirow{ 2}{*}{10+/10-} & ROC & \textbf{0.994 ± 0.005} & 0.965 ± 0.020 & 0.570 ± 0.028 & 0.801 ± 0.030 & 0.631 ± 0.045 & 0.858 ± 0.014 \\ & PRC & \textbf{0.938 ± 0.043} & 0.697 ± 0.134 & 0.014 ± 0.002 & 0.085 ± 0.022 & 0.107 ± 0.020 & 0.133 ± 0.038\\
+\midrule
+\multirow{ 2}{*}{5+/10-} & ROC & \textbf{0.968 ± 0.019} & 0.927 ± 0.062 & 0.525 ± 0.038 & 0.693 ± 0.025 & 0.685 ± 0.130 & 0.679 ± 0.019 \\ & PRC & \textbf{0.794 ± 0.141} & 0.626 ± 0.188 & 0.031 ± 0.012 & 0.029 ± 0.003 & 0.122 ± 0.054 & 0.096 ± 0.010\\
+\midrule
+\multirow{ 2}{*}{1+/10-} & ROC & \textbf{0.866 ± 0.086} & 0.828 ± 0.108 & 0.520 ± 0.087 & 0.764 ± 0.021 & 0.684 ± 0.032 & 0.734 ± 0.018 \\ & PRC & \textbf{0.380 ± 0.140} & 0.361 ± 0.162 & 0.039 ± 0.066 & 0.066 ± 0.027 & 0.041 ± 0.009 & 0.108 ± 0.009\\
+\midrule
+\multirow{ 2}{*}{1+/5-} & ROC & \textbf{0.874 ± 0.081} & 0.781 ± 0.094 & 0.520 ± 0.084 & 0.707 ± 0.082 & 0.590 ± 0.087 & 0.700 ± 0.007 \\ & PRC & \textbf{0.417 ± 0.092} & 0.347 ± 0.111 & 0.050 ± 0.082 & 0.079 ± 0.037 & 0.045 ± 0.017 & 0.063 ± 0.005\\
+\midrule
+\multirow{ 2}{*}{1+/1-} & ROC & \textbf{0.833 ± 0.088} & 0.689 ± 0.150 & 0.545 ± 0.040 & 0.593 ± 0.034 & 0.732 ± 0.022 & 0.496 ± 0.010 \\ & PRC & \textbf{0.375 ± 0.124} & 0.174 ± 0.151 & 0.091 ± 0.102 & 0.041 ± 0.008 & 0.104 ± 0.012 & 0.035 ± 0.005\\
+\bottomrule
+\end{tabular}
+}
+\caption[ROC-AUC and PR-AUC Scores for DUD-E GPCR cxcr4 Target.]{ROC-AUC and PR-AUC Scores for ML Models on DUD-E GPCR cxcr4 Target. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text. The first column shows the composition of the support set as explained in text.}
+\label{table:DUD-E_GPCR-cxcr4}
+\end{table*}
+
+\subsection{ECFP vs GCN Learned Embeddings on Tox21}
+\label{ecfpvsembeddings}
+
+\begin{table*}[p]
+\centering
+\ra{1.0}
+{\renewcommand{\arraystretch}{1}}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\textbf{Tox21 Target} & \textbf{Support Set} & \textbf{Metric} & \textbf{ECFP} & \textbf{Graphs} & \textbf{p-value} \\
+\midrule
+\multirow{ 2}{*}{SR-HSE} & \multirow{ 2}{*}{10+/10-} & ROC & 0.751 ± 0.017 & \textbf{0.782 ± 0.017} & 0.000 \\ & & PRC & 0.227 ± 0.042 & \textbf{0.271 ± 0.055} & 0.004\\
+\hdashline
+\multirow{ 2}{*}{SR-HSE} & \multirow{ 2}{*}{5+/10-} & ROC & 0.741 ± 0.016 & \textbf{0.772 ± 0.013} & 0.000 \\ & & PRC & 0.202 ± 0.045 & \textbf{0.278 ± 0.045} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-HSE} & \multirow{ 2}{*}{1+/10-} & ROC & 0.665 ± 0.156 & \textbf{0.780 ± 0.003} & 0.000 \\ & & PRC & 0.148 ± 0.062 & \textbf{0.283 ± 0.016} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-HSE} & \multirow{ 2}{*}{1+/5-} & ROC & 0.715 ± 0.102 & \textbf{0.773 ± 0.005} & 0.000 \\ & & PRC & 0.181 ± 0.060 & \textbf{0.270 ± 0.018} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-HSE} & \multirow{ 2}{*}{1+/1-} & ROC & 0.641 ± 0.168 & \textbf{0.779 ± 0.007} & 0.000 \\ & & PRC & 0.163 ± 0.081 & \textbf{0.266 ± 0.029} & 0.000\\
+\bottomrule
+
+\multirow{ 2}{*}{SR-MMP} & \multirow{ 2}{*}{10+/10-} & ROC & 0.793 ± 0.022 & \textbf{0.845 ± 0.015} & 0.000 \\ & & PRC & 0.477 ± 0.044 & \textbf{0.510 ± 0.032} & 0.015\\
+\hdashline
+\multirow{ 2}{*}{SR-MMP} & \multirow{ 2}{*}{5+/10-} & ROC & 0.765 ± 0.046 & \textbf{0.846 ± 0.014} & 0.000 \\ & & PRC & 0.425 ± 0.049 & \textbf{0.527 ± 0.029} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-MMP} & \multirow{ 2}{*}{1+/10-} & ROC & 0.763 ± 0.080 & \textbf{0.849 ± 0.005} & 0.000 \\ & & PRC & 0.444 ± 0.109 & \textbf{0.508 ± 0.025} & 0.021\\
+\hdashline
+\multirow{ 2}{*}{SR-MMP} & \multirow{ 2}{*}{1+/5-} & ROC & 0.736 ± 0.156 & \textbf{0.846 ± 0.005} & 0.000 \\ & & PRC & 0.445 ± 0.121 & \textbf{0.508 ± 0.025} & 0.002\\
+\hdashline
+\multirow{ 2}{*}{SR-MMP} & \multirow{ 2}{*}{1+/1-} & ROC & 0.647 ± 0.219 & \textbf{0.847 ± 0.003} & 0.000 \\ & & PRC & 0.355 ± 0.151 & \textbf{0.506 ± 0.018} & 0.000\\
+\bottomrule
+
+\multirow{ 2}{*}{SR-p53} & \multirow{ 2}{*}{10+/10-} & ROC & 0.793 ± 0.013 & \textbf{0.850 ± 0.004} & 0.000 \\ & & PRC & 0.309 ± 0.051 & \textbf{0.369 ± 0.027} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-p53} & \multirow{ 2}{*}{5+/10-} & ROC & 0.782 ± 0.022 & \textbf{0.852 ± 0.009} & 0.000 \\ & & PRC & 0.278 ± 0.068 & \textbf{0.358 ± 0.042} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-p53} & \multirow{ 2}{*}{1+/10-} & ROC & 0.780 ± 0.087 & \textbf{0.848 ± 0.005} & 0.000 \\ & & PRC & 0.279 ± 0.086 & \textbf{0.361 ± 0.030} & 0.000\\
+\hdashline
+\multirow{ 2}{*}{SR-p53} & \multirow{ 2}{*}{1+/5-} & ROC & 0.770 ± 0.036 & \textbf{0.840 ± 0.005} & 0.000 \\ & & PRC & 0.273 ± 0.087 & \textbf{0.310 ± 0.023} & 0.323\\
+\hdashline
+\multirow{ 2}{*}{SR-p53} & \multirow{ 2}{*}{1+/1-} & ROC & 0.753 ± 0.116 & \textbf{0.834 ± 0.003} & 0.000 \\ & & PRC & 0.274 ± 0.089 & \textbf{0.346 ± 0.021} & 0.001\\
+\bottomrule
+
+\end{tabular}
+\caption[ROC-AUC and PR-AUC Scores for Prototypical Networks on Tox21 with ECFP or GCN embeddings]{ROC-AUC and PR-AUC Scores for Prototypical Networks on Tox21 with ECFP or GCN embeddings. Values are mean values with standard deviation over 20 runs. Best values are highlighted in bold text. A Mann-Whitney U Rank p-value less than 0.05 indicates significant difference of the GCN Embeddings over ECFPs.}
+\label{table:Tox21-SR-HSE-Tox21}
+\end{table*}
