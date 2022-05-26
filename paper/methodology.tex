@@ -2,6 +2,8 @@
 
 In this work, we implement a Random Forest and a Graph Convolutional Network (GCN) to use as benchmark models. Additionally, we implement four few-shot machine learning architectures, namely, Siamese Networks, Matching Networks, Prototypical Networks, and Relation Networks. The state of the art, IterRefLSTMs \citep{altae2017low}, are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects, which are then processed using GCNs to produce a vectorised embedding in computational space. Throughout our work, we try to follow the implementation of \citet{altae2017low} as closely as possible for the sake of reproducibility and homogenising the results for comparison.
 
+
+
 \subsection{Datasets}
 
 In this work, we make use of the following three datasets;
@@ -15,7 +17,7 @@ In this work, we make use of the following three datasets;
     \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} -- Used for benchmarking virtual screening techniques by introducing a number of active compounds against specific targets. For each active, a number of \textit{decoys} with similar physical properties, but different topologies, are made available. For this research study, we made use of the GPCR subset of the DUD-E dataset \citep{mysinger2012directory}. The data was obtained directly from the DUD-E website.\footnote{Accessed from: \url{http://dude.docking.org/subsets/gpcr}. Last Accessed: 26/11/2022} The AA2AR, DRD3, and ADRB1 targets are used for training. Two targets, ADRB2 and CXCR4, are reserved for testing.
 \end{itemize}
 
-Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datasets, highlighting the scarceness of data on active compounds in this domain. Due to this class imbalance we select appropriate performance metrics (see Section~\ref{sec:eval}).
+Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datasets, highlighting the scarceness of data on active compounds in this domain. Due to this class imbalance we select appropriate performance metrics (see Evaluation Section).
 
 \begin{table}[h]
 	\centering
@@ -32,36 +34,19 @@ Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datase
 	\label{table:datasetimbalance}
 \end{table}
 
+
+
 \subsection{Molecular Representations}
 
 We first standardise the molecules according to a set of well-defined and consistent rules and conventions. It is of utmost importance to maintain uniformity and integrity across the different datasets (and sources) being used. \citet{bento2020open} present an open source chemical structure curation pipeline based on RDKit\citep{rdkit} for validating and standardising chemical structures, which follow FDA/IUPAC guidelines \citep{brecher2006graphical, food2007substance}. Their work is available in the ChEMBL Structure Pipeline package \cite{bento2020open} and is used to standardise the molecules in our pipeline. 
 
 We create a molecular graph from the SMILES string of the standardized molecule using RDKit, an open-source toolkit for cheminformatics. We then one-hot encode eight features for the atoms in each molecule, namely, atom type, atomic number, atom degree, explicit valence, hybridisation, formal charge, number of radical electrons, and aromaticity. Self loops are added to every node in the generated graph, so aggregation functions during message passing consider the features of the node itself. The order of the atoms follows the canonical order of the atoms assigned through RDKit. We make use of the Deep Graph Library (DGL) LifeSci \cite{dgllife} library to create the graph objects and subsequently process them using the DGL library \cite{wang2019dgl}.
 
+
+
 \subsection{Episodic Learning}
 
-We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules.
-
-The value for $K$ is not always the same for both classes as we also experiment with using a different number of molecules sampled from each class to make up the support set. Table~\ref{table:support-set-sizes} contains the composition of the support sets used for our experiments. For each episode, we sample a total of 128 query molecules, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives.
-
-\begin{table}
-	\centering
-	\begin{tabular}{@{}rrr@{}}
-		\hline
-		Actives & Inactives/Decoys & Support Set Size \\
-		\hline
-		10 & 10 & 20 \\
-		5 & 10 & 15 \\
-		1 & 10 & 11 \\
-		1 & 5 & 6 \\
-		1 & 1 & 2 \\
-		\hline
-	\end{tabular}
-	\caption{Support set composition}
-	\label{table:support-set-sizes}
-\end{table}
-
-Figure~\ref{fig:episodiclearning} illustrates a high-level overview of the learning methodology which uses.
+Figure~\ref{fig:episodiclearning} illustrates a high-level overview of the episodic learning methodology. Training for few-shot learning is carried out in a series of episodes, framed as \textit{N-way K-shot} classification tasks. We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules. These classification tasks match the conditions at training time with those during testing, as proposed by \citet{vinyals2016matching}. The tasks in our research are binary classification tasks, therefore \textit{N} is always set to two to represent the active and the inactive/decoy class respectively. Experiments with varying values of \textit{K} are carried out to generate the support sets, with a minimum of one data point, to a maximum of ten data points (molecules) per class. The combinations for \textit{K} active and inactive/decoy classes are not exhaustive, but we follow the support set composition used in \citet{altae2017low} to directly compare results with this study.
 
 \begin{figure}[ht!]
 	\centering
@@ -69,6 +54,25 @@ Figure~\ref{fig:episodiclearning} illustrates a high-level overview of the learn
 	\caption{Episodic learning schematic}
 	\label{fig:episodiclearning}
 \end{figure}
+
+Table~\ref{table:support-set-sizes} contains the composition of the support sets used in our experiments. For each episode, we sample a total of 128 query molecules, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. The choice of the support set composition was based on the methodology presented in \citet{altae2017low}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}rrr@{}}
+		\hline
+		Actives & Inactives/Decoys & Support Set Size \\
+		\hline
+		10  & 10 & 20 \\
+		5   & 10 & 15 \\
+		1   & 10 & 11 \\
+		1   & 5  & 6 \\
+		1   & 1  & 2 \\
+		\hline
+	\end{tabular}
+	\caption{Support set composition}
+	\label{table:support-set-sizes}
+\end{table}
 
 
 
@@ -106,12 +110,14 @@ Three convolutional layers are present in our architecture, after which a maximu
 	r^{(i)} = \sum_{k=1}^{N_i} x^{(i)}_k
 \end{equation}
 
-A linear transformation is applied to the output from the read-out layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure \ref{fig:dvgcnarchi2}.
+A linear transformation is applied to the output from the readout layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure~\ref{fig:dvgcnarchi2}.
 
 \begin{table}
 	\centering
 	\begin{tabular}{@{}lrrl@{}}
+	\hline
 	\textbf{Layer Type} & \textbf{Input Dimension} & \textbf{Output Dimension} & \textbf{Non-Linearity} \\
+	\hline
 	GraphConv & 177 & 64 & ReLU \\
 	Max Pooling & 64 & 64 & \\
 	GraphConv & 64 & 128 & ReLU \\
@@ -120,6 +126,7 @@ A linear transformation is applied to the output from the read-out layer, follow
 	Max Pooling & 64 & 64 & \\
 	SumPool Readout & 64 & 64 & tanh \\
 	Linear & 64 & 128 & tanh \\
+	\hline	
 	\end{tabular}
 	\caption{Graph Convolution Network Architecture}
 	\label{table:gcn-architecture}
@@ -132,9 +139,9 @@ A linear transformation is applied to the output from the read-out layer, follow
 	\label{fig:dvgcnarchi2}
 \end{figure}
 
-\subsubsection{Benchmark}
+\subsubsection{Benchmark Models}
 
-We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of 4. Meanwhile, the same GCN architecture used for the few-shot learning models is used for the benchmark. The only addition to the architecture is a final linear layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifiies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining data for the designated target is used for testing.
+We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining data for the designated target is used for testing.
 
 We also carry out a final benchmark test in retrospect by taking a random selection of query molecules from a test target, generating the ECFP with the same aforementioned parameters and then calculating the Tanimoto distance to classify the remaining test molecules based on this distance. However, we find that this does not hold any significant predictive capability. 
 
@@ -152,6 +159,5 @@ Episodic learning is used to train a few-shot machine learning model. \citet{vin
 	% }
 
 \subsubsection{Evaluation}
-\label{sec:eval}
 
 The evaluation metrics used are the Receiver Operating Characteristic (ROC) curve, and the Precision-Recall Curve (PRC). The state-of-the-art \cite{altae2017low} only reports ROC results, however, this metric alone does not fully encompass the nature of the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, the detection of rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC are used to evaluate how well the model can classify the active class. The former is related to a low false negative rate, meaning active compounds incorrectly classified as inactive/decoys, while high precision is attributed by a low false positive rate, meaning compounds classified as active when in fact they are inactive/decoys. The ideal scenario for predicting the minority active class is thus one where we achieve high recall and high precision. Given that the active class is in such a minority, even a small false positive rate could result in high numbers of false positives, due to the high number of the negative class examples. We apply statistical analysis on the ROC and PRC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against those of the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}. The tabulated results are the mean values from 20 randomly sampled test rounds, encompassing all the test targets, along with the standard deviation for each mean. The results for each individual target is available in the appendices.
