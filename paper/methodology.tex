@@ -1,57 +1,87 @@
-%% @@ to start reviewing from here JP
-
 \section{Methodology}
 
-In this work, we implement a Random Forest, and a Graph Convolutional Network to use as benchmark models. Additionally, we implement four few-shot machine learning architectures, namely, Siamese Networks, Matching Networks, Prototypical Networks and Relation Networks. IterRefLSTMs, from the state of teh art work are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects, which are then processed using graph convolutional networks (GCNs) to produce an vectorised embedding in computational space. Throughout our work, we try to follow the work of \citet{altae2017low} as closely as possible for the sake of reproducability and homogenising the  results for comparison
-.
+In this work, we implement a Random Forest and a Graph Convolutional Network (GCN) to use as benchmark models. Additionally, we implement four few-shot machine learning architectures, namely, Siamese Networks, Matching Networks, Prototypical Networks, and Relation Networks. The state of the art, IterRefLSTMs \citep{altae2017low}, are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects, which are then processed using GCNs to produce a vectorised embedding in computational space. Throughout our work, we try to follow the implementation of \citet{altae2017low} as closely as possible for the sake of reproducibility and homogenising the results for comparison.
 
 \subsection{Datasets}
 
 In this work, we make use of the following three datasets;
 
 \begin{itemize}
-    \item \textbf{Tox21} \cite{huang2016tox21challenge} - Mainly used for lead optimisation, containing toxicity data for 12 targets \citep{tox21}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz. Last Accessed: 08/11/2021} in CSV format. The NR-AR, NR-AR-LBD, NR-AhR, NR-Aromatase, NR-ER, NR-ER-LBD, NR-PPAR-gamma, SR-ARE, SR-ATAD5 targets are reserved for training, and the remaining SR-HSE, SR-MMP, SR-p53 targets for testing.
-    \item \textbf{Maximum Unbiased Validation (MUV)} \citep{rohrer2009maximum} - Based on PubChem BioAssays, used for validating virtual screening techniques against 17 different targets \citep{rohrer2009maximum}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/muv.csv.gz. Last Accessed: 08/11/2021} in CSV format. A total of 12 targets (MUV-466 - MUV-810) are reserved for training, while MUV-832, MUV-846, MUV-852, MUV-858, and MUV-859 are reserved for testing.
-    \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} - Used for benchmarking virtual screening techniques by introducing a number of active compounds against specific targets. For each active, a number of \textit{decoys} with similar physical properties, but different topologies, are made available. For this research study, we made use of the GPCR subset of the DUD-E dataset \citep{mysinger2012directory}. The data was obtained directly from the DUD-E website.\footnote{Accessed from: https://dude.docking.org/subsets. Last Accessed: 08/11/2021} The AA2AR, DRD3, and ADRB1 are used for training. Two targets are reserved for testing, in which ADRB2 contains decoys that are auto-generated against a set of known active ligands, while for the CXCR4 target these are hand-picked. 
+    
+    \item \textbf{Tox21} \citep{huang2016tox21challenge} -- Mainly used for lead optimisation, containing toxicity data for 12 targets \citep{tox21}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: \url{https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz}. Last Accessed: 26/05/2022} in CSV format. The NR-AR, NR-AR-LBD, NR-AhR, NR-Aromatase, NR-ER, NR-ER-LBD, NR-PPAR-gamma, SR-ARE, SR-ATAD5 targets are reserved for training, and the remaining SR-HSE, SR-MMP, SR-p53 targets are used for testing.
+    
+    \item \textbf{Maximum Unbiased Validation (MUV)} \citep{rohrer2009maximum} -- Based on PubChem BioAssays, used for validating virtual screening techniques against 17 different targets \citep{rohrer2009maximum}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: \url{https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/muv.csv.gz}. Last Accessed: 26/05/2022} in CSV format. A total of 12 targets (MUV-466, MUV-548, MUV-600, MUV-644, MUV-652, MUV-689, MUV-692, MUV-712, MUV-713, MUV-733, MUV-737, and MUV-810) are reserved for training, while MUV-832, MUV-846, MUV-852, MUV-858, and MUV-859 are reserved for testing.
+    
+    \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} -- Used for benchmarking virtual screening techniques by introducing a number of active compounds against specific targets. For each active, a number of \textit{decoys} with similar physical properties, but different topologies, are made available. For this research study, we made use of the GPCR subset of the DUD-E dataset \citep{mysinger2012directory}. The data was obtained directly from the DUD-E website.\footnote{Accessed from: \url{http://dude.docking.org/subsets/gpcr}. Last Accessed: 26/11/2022} The AA2AR, DRD3, and ADRB1 targets are used for training. Two targets, ADRB2 and CXCR4, are reserved for testing.
 \end{itemize}
+
+Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datasets, highlighting the scarceness of data on active compounds in this domain. Due to this class imbalance we select appropriate performance metrics (see Section~\ref{sec:eval}).
 
 \begin{table}[h]
 	\centering
 	\caption{Number of actives and inactives/decoys across all targets in the datasets used. Figures in parentheses show the percentage of the total compounds in the dataset.}
 	\begin{tabular}{@{}crr@{}}
 		\hline
-		Dataset & Actives & Inactives/Decoys \\
+		Dataset 		& Actives 			& Inactives/Decoys \\
 		\hline
-		Tox21 & 4,149 (7.04\%) & 54,746 (92.96\%) \\
-		\hline
-		MUV & 347 (0.20\%) & 175,990 (99.80\%) \\
-		\hline
-		DUD-E (GPCR) & 1,249 (1.45\%) & 84,856 (98.55\%) \\
+		Tox21 			& 4,149 (7.04\%) 	& 54,746 (92.96\%) \\
+		MUV 			& 347 (0.20\%) 		& 175,990 (99.80\%) \\
+		DUD-E (GPCR) 	& 1,249 (1.45\%) 	& 84,856 (98.55\%) \\
+		\hline				
 	\end{tabular}
 	\label{table:datasetimbalance}
 \end{table}
 
 \subsection{Molecular Representations}
 
-We first create a molecular graph from the SMILES string using RDKit, an open-source toolkit for cheminformatics. Standardisation of compounds according to a set of well-defined and consistent rules and conventions is of utmost importance to maintain uniformity and integrity across the datasets being used. \citet{bento2020open} present an open source chemical structure curation pipeline based on RDKit for validating and standardising chemical structures, which follow FDA/IUPAC guidelines \citep{brecher2006graphical, food2007substance}. Their work is available in the ChEMBL Structure Pipeline package \cite{bento2020open} and is used to standardise the molecules in our pipeline. We then create one-hot encoded features for the atoms in each molecule, namely, atom type, atomic number, atom degree, explicit valence, hybridisation, formal charge, number of radical electrons, and aromaticity. Self loops are added to every node in the generated graph, so aggregation functions during message passing consider the features of the node itself. The order of the atoms follows the canonical order of the atoms assigned through RDKit. We make use of the DGL LifeSci \cite{dgllife} library to create the graph objects and subsequently process them using the DGL library \cite{wang2019dgl}.
+We first standardise the molecules according to a set of well-defined and consistent rules and conventions. It is of utmost importance to maintain uniformity and integrity across the different datasets (and sources) being used. \citet{bento2020open} present an open source chemical structure curation pipeline based on RDKit\citep{rdkit} for validating and standardising chemical structures, which follow FDA/IUPAC guidelines \citep{brecher2006graphical, food2007substance}. Their work is available in the ChEMBL Structure Pipeline package \cite{bento2020open} and is used to standardise the molecules in our pipeline. 
 
+We create a molecular graph from the SMILES string of the standardized molecule using RDKit, an open-source toolkit for cheminformatics. We then one-hot encode eight features for the atoms in each molecule, namely, atom type, atomic number, atom degree, explicit valence, hybridisation, formal charge, number of radical electrons, and aromaticity. Self loops are added to every node in the generated graph, so aggregation functions during message passing consider the features of the node itself. The order of the atoms follows the canonical order of the atoms assigned through RDKit. We make use of the Deep Graph Library (DGL) LifeSci \cite{dgllife} library to create the graph objects and subsequently process them using the DGL library \cite{wang2019dgl}.
 
-\subsection{Machine Learning Models}
+\subsection{Episodic Learning}
 
-Before processing the molecular graph, we first learn an embedding using graph neural networks. Four different architectures, including Siamese, Matching, Prototypical and Relation Networks, process the learned graph embeddings to train our meta-learner. IterRefLSTMs are utilised to refine the latent space embeddings.
-\begin{figure}[h]
+We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules.
+
+The value for $K$ is not always the same for both classes as we also experiment with using a different number of molecules sampled from each class to make up the support set. Table~\ref{table:support-set-sizes} contains the composition of the support sets used for our experiments. For each episode, we sample a total of 128 query molecules, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives.
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}rrr@{}}
+		\hline
+		Actives & Inactives/Decoys & Support Set Size \\
+		\hline
+		10 & 10 & 20 \\
+		5 & 10 & 15 \\
+		1 & 10 & 11 \\
+		1 & 5 & 6 \\
+		1 & 1 & 2 \\
+		\hline
+	\end{tabular}
+	\caption{Support set composition}
+	\label{table:support-set-sizes}
+\end{table}
+
+Figure~\ref{fig:episodiclearning} illustrates a high-level overview of the learning methodology which uses.
+
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.9\linewidth]{img/episodic-learning.png}
 	\caption{Episodic learning schematic}
 	\label{fig:episodiclearning}
 \end{figure}
 
-\begin{figure*}
+
+
+\subsection{Machine Learning Models}
+
+Before processing the molecular graph, the model first learns an embedding using graph neural networks. Four different architectures, including Siamese, Matching, Prototypical and Relation Networks, process the learned graph embeddings to train our meta-learner. IterRefLSTMs are utilised to refine the latent space embeddings. 
+
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/DVGCNArchi.png}
-	\caption{Learning an embedding through a Graph Convolutional Network (GCN). The molecule, represented as a graph object with nodes, edges, and atom features, is processed using graph convolutions. A max message-passing function over the current and neighbouring nodes follows each convolution layer. After this process, a sum readout aggregates all atom features into one vector. A TanH function activates this vector, and a dense linear layer processes the output vector. A non-linear TanH function activates this vector to yield the final learned molecular embedding.}
+	\caption{Learning an embedding through a Graph Convolutional Network (GCN). The molecule, represented as a graph object with nodes, edges, and atom features, is processed using graph convolutions. A max message-passing function over the current and neighbouring nodes follows each convolution layer. After this process, a sum readout aggregates all atom features into one vector. A tanh function activates this vector, and a dense linear layer processes the output vector. A non-linear tanh function activates this vector to yield the final learned molecular embedding.}
 	\label{fig:dvgcnarchi}
-\end{figure*}
+\end{figure}
 
 \subsubsection{Graph Convolutional Networks}
 
@@ -76,7 +106,7 @@ Three convolutional layers are present in our architecture, after which a maximu
 	r^{(i)} = \sum_{k=1}^{N_i} x^{(i)}_k
 \end{equation}
 
-A linear transformation is applied to the output from the read-out layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (TanH), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure \ref{fig:dvgcnarchi2}.
+A linear transformation is applied to the output from the read-out layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure \ref{fig:dvgcnarchi2}.
 
 \begin{table}
 	\centering
@@ -88,8 +118,8 @@ A linear transformation is applied to the output from the read-out layer, follow
 	Max Pooling & 128 & 128 & \\
 	GraphConv & 128 & 64 & ReLU \\
 	Max Pooling & 64 & 64 & \\
-	SumPool Readout & 64 & 64 & TanH \\
-	Linear & 64 & 128 & TanH \\
+	SumPool Readout & 64 & 64 & tanh \\
+	Linear & 64 & 128 & tanh \\
 	\end{tabular}
 	\caption{Graph Convolution Network Architecture}
 	\label{table:gcn-architecture}
@@ -98,7 +128,7 @@ A linear transformation is applied to the output from the read-out layer, follow
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{img/gcn-layers.png}
-	\caption[Layers for graph processing in our GCN.]{Graph processing layers in our GCN implementation. The graph convolution layers apply operations on each individual node's feature maps based on neighbouring nodes. The ReLU function is applied after each convolutional layer, and the TanH function is applied after the final readout layer.}
+	\caption[Layers for graph processing in our GCN.]{Graph processing layers in our GCN implementation. The graph convolution layers apply operations on each individual node's feature maps based on neighbouring nodes. The ReLU function is applied after each convolutional layer, and the tanh function is applied after the final readout layer.}
 	\label{fig:dvgcnarchi2}
 \end{figure}
 
@@ -116,11 +146,12 @@ Episodic learning is used to train a few-shot machine learning model. \citet{vin
 	% \begin{minipage}{\linewidth}
 		% \centering
 		%     \includegraphics[width=1\linewidth]{img/gcn-layers.png}
-		%   \captionof{figure}{Graph processing layers in our GCN implementation. The graph convolution layers apply operations on each individual node's feature maps based on neighbouring nodes. A ReLU function activates the output from each convolutional layer. A TanH function activates the final readout layer.}
+		%   \captionof{figure}{Graph processing layers in our GCN implementation. The graph convolution layers apply operations on each individual node's feature maps based on neighbouring nodes. A ReLU function activates the output from each convolutional layer. A tanh function activates the final readout layer.}
 		%  \label{fig:dvgcnarchi2}
 		% \end{minipage}
 	% }
 
 \subsubsection{Evaluation}
+\label{sec:eval}
 
 The evaluation metrics used are the Receiver Operating Characteristic (ROC) curve, and the Precision-Recall Curve (PRC). The state-of-the-art \cite{altae2017low} only reports ROC results, however, this metric alone does not fully encompass the nature of the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, the detection of rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC are used to evaluate how well the model can classify the active class. The former is related to a low false negative rate, meaning active compounds incorrectly classified as inactive/decoys, while high precision is attributed by a low false positive rate, meaning compounds classified as active when in fact they are inactive/decoys. The ideal scenario for predicting the minority active class is thus one where we achieve high recall and high precision. Given that the active class is in such a minority, even a small false positive rate could result in high numbers of false positives, due to the high number of the negative class examples. We apply statistical analysis on the ROC and PRC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against those of the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}. The tabulated results are the mean values from 20 randomly sampled test rounds, encompassing all the test targets, along with the standard deviation for each mean. The results for each individual target is available in the appendices.
