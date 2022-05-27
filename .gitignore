@@ -1,5 +1,4 @@
-## UM Template files
-other/
+.DS_Store
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
