@@ -3,7 +3,36 @@
 
 In this work, we implement a Random Forest and a Graph Convolutional Network (GCN) to use as benchmark models. Additionally, we implement four few-shot machine learning architectures, namely, Siamese Networks, Matching Networks, Prototypical Networks, and Relation Networks. The state of the art, IterRefLSTMs \citep{altae2017low}, are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects, which are then processed using GCNs to produce a vectorised embedding in computational space. Throughout our work, we try to follow the implementation of \citet{altae2017low} as closely as possible for the sake of reproducibility and homogenising the results for comparison.
 
-%% TODO @@ DV seven steps text + FIGURE... 
+\subsection{Machine Learning Pipeline}
+
+The machine learning pipeline for this study consists of nine main parts, which are illustrated in Figure~\ref{fig:architecture-schematic} and described hereunder:
+
+\begin{enumerate}
+	\item \textbf{Data Acquisition}. We utilise three main publicly available datasets for this study, namely, Tox21, MUV ,and the GPCR subset of DUD-E. The data is provided as SMILES strings with a flag for the experimental assays in the dataset recording whether the molecule is active or an inactive/decoy.
+
+	\item \textbf{Standardise molecule}. The SMILES strings are first standardised in order to transform all molecular representations according to a set of well-defined and consistent rules and conventions to ensure validity and uniformity.
+
+	\item \textbf{Molecular features generation}. The molecular graph generated from the standardised SMILES representation is enriched with atom descriptors to add information to the molecular representation.
+
+	\item \textbf{Molecular graphs generation}. The molecular representations we have so far are transformed into graph objects, consisting of nodes and edges representing atoms and bonds respectively. The connectivity between atoms is represented via an adjacency matrix.
+
+	\item \textbf{Episode generation}. Effective few-shot learning necessitates that conditions at training match those at testing \citep{vinyals2016matching}. Therefore, support sets and queries are randomly sampled to form a series of episodes for training. The support sets are composed of a number of examples per class. The number of examples per class ranges from just one example, up to ten examples.
+
+	\item \textbf{Learning a molecular embedding}. The sampled molecules in the episode are used to learn a molecular embedding using a graph convolutional network.
+
+	\item \textbf{Few-Shot Learning}. The learned embeddings are processed using four different meta-learning architectures namely Siamese, Matching, Prototypical and Relation Networks. Iterative Refinement LSTMs \citep{altae2017low} are used to enrich the few-shot learning. A subset of experimental assays in each dataset is reserved for training, while the rest are reserved for testing.
+
+	\item \textbf{Testing}. The trained models are subsequently used to test on new experimental assays, unseen during training, to gauge the generalising capability of a model trained for a low-data scenario. Support sets are randomly sampled and trained on the remaining molecules in the dataset for 20 rounds, for which the mean and standard deviation of the areas under the curve for Precision-Recall Curve and Receiver Operator Characteristic curve are calculated to quantify performance.
+
+	\item \textbf{Evaluation}. Finally, we evaluate the results based on the ROC and Precision Recall Curves (PRC) scores from the 20 test rounds. We apply statistical analysis for results obtained across different experiments to determine the best performing techniques for each support set composition. Confusion matrices, ROC and PRC graphs for the experiment with the median ROC score from the 20 rounds are generated after test completion.
+\end{enumerate}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.9\linewidth]{img/architecture-schematic.png}
+	\caption[Schematic of the major parts in our architecture]{Schematic of the machine learning pipeline designed for this study. The changes across few-shot learning architectures lies in the `Train Few-Shot Learning Model' component, otherwise, all other modules remain identical.}
+	\label{fig:architecture-schematic}
+\end{figure}
 
 \subsection{Datasets}
 
@@ -169,54 +198,58 @@ We also carry out a final benchmark test in retrospect by taking a random select
 
 \subsubsection{Few-Shot Learning Models}
 
+The generated molecular embeddings from the GCN are passed to the few-shot learning architectures. The success of a few-shot learning model for metric-based meta-learning is dependent on the effectiveness of the kernel $k_\theta$, which measures the similarity between data samples using a metric or distance function. The models discussed in this section, excluding the benchmark model, use the embeddings generated from the GCN, presented in the support and query sets, to learn the kernel function.
 
+To be able to compare the model's effectiveness objectively, the GCN architecture remains unchanged in all experiments, including the benchmark.
 
 \subsubsection{Siamese Networks}
 
-Siamese networks \citep{koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples as inputs. The outputs from the networks are compared to learn the relationship between them. The following is the process employed for learning a classifier using Siamese Networks. The process is repeated for all training tasks.
+Siamese networks \citep{koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The outputs from the networks are compared to learn the relationship between them. The following is the process employed for learning a classifier using Siamese Networks. The process is repeated for all training tasks.
 
 \begin{enumerate}
     \item Generate a list of all possible pairs between training data. If both data samples in the pair have the same target, the pair's label is set to 1, and 0 if otherwise.
     \item Create a twin network using the GCN architecture to embed two molecular graph inputs into latent space.
     \item Calculate the L1 distance between the molecule embeddings. This is achieved by calculating the absolute difference between the embeddings $|mol_i-mol_j|$.
-    \item The distance between the two embeddings is passed through a linear feedforward layer with 128 nodes and an output of 2, followed by a sigmoid function to output the probability.
-    \item As we are dealing with binary classification, the binary cross entropy loss is calculated and back-propagated to the network.
+    \item The distance between the two embeddings is passed through a linear feedforward layer with 128 nodes and an output of 2, followed by a sigmoid function to output the probability that the two molecules belong to the same class.
+    \item As we are dealing with binary classification, the binary cross-entropy loss is calculated and backpropagated to the network.
 \end{enumerate}
 
 \subsubsection{Matching Networks}
 
-Matching Networks builds on Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity between pairs of data points between the support and query sets is computed, which is then normalised by a Softmax function. As proposed in \citet{vinyals2016matching}, Fully Contextual Embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability of embedding the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, taking as input the whole support set to adjust the embedding based on the other support samples.
+Matching Networks extends Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention-weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity of pairs of data points between the support and query sets is computed, which is then normalised by a softmax function. As proposed in \citet{vinyals2016matching}, Fully Contextual Embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability of embedding the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, taking as input the whole support set to adjust the embedding based on the other support samples.
 
-Two functions are defined. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$, using a bidirectional LSTM. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over 10 processing "read" steps, until eventually the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. Throughout each iteration, the hidden state and the output from the attention function are added together. To train the network using stochastic gradient descent, the cross entropy loss is computed for each query prediction.
+Two functions are defined. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$, using a bidirectional LSTM. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over ten processing ``read'' steps, until eventually the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. Throughout each iteration, the hidden state and the output from the attention function are added together. To train the network using stochastic gradient descent, the cross-entropy loss is computed for each query prediction.
 
 \subsubsection{Prototypical Networks}
 
-Prototypical Networks \citep{snell2017prototypical} have similarities to the Matching Networks described above, but instead of considering the individual support set embeddings, the mean vector of the embeddings for each class within the support set is taken. This mean vector for each class is referred to as the \textit{prototype}. Another improvement the authors of the original paper make over Matching Networks \citep{vinyals2016matching}, is the use of Euclidean distance rather than the Cosine distance. In order to classify query data samples, the softmax of the inverse of the euclidean distances between each query and each prototype is taken. To train the network through stochastic gradient descent, the negative log likelihood loss is used. 
+Prototypical Networks \citep{snell2017prototypical} have similarities to the Matching Networks described above, but instead of considering the individual support set embeddings, the mean vector of the embeddings for each class within the support set is taken. This mean vector for each class is referred to as the \textit{prototype}. Another improvement the authors make over Matching Networks, is the use of Euclidean rather than the cosine distance. In order to classify query data samples, the softmax of the inverse of the euclidean distances between each query and each prototype is taken. To train the network through stochastic gradient descent, the negative log-likelihood loss is used. 
 
 \subsubsection{Relation Networks}
 
-For the Relation Networks \citep{sung2018learning}, the classification of query samples is not done directly in latent space from the embeddings. The embeddings for the support and query samples are generated using the GCN. Following this step, the feature maps concatenations are created by concatenating the query samples with each data sample within the support set. The feature map concatenation therefore has a size double the length of the embedding generated by the GCN.
+For the Relation Networks \citep{sung2018learning}, the classification of query samples is not done directly in latent space from the embeddings. The embeddings for the support and query samples are generated using the GCN. Following this step, the feature maps concatenations are created by concatenating the query samples with each data sample within the support set. The feature map concatenation therefore is double the length of the embedding generated by the GCN.
 
-The relationship between the queries and the different classes within the support set is captured by passing these feature map concatenations through a feed forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. $[ , ]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The architecture of this function is defined in Table \ref{table:relation-neural-net}. The loss function used is Mean Squared Error (MSE) loss as proposed in the original paper.
+The relationship between the queries and the different classes within the support set is captured by passing these feature map concatenations through a feed forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The architecture of this function is defined in Table~\ref{table:relation-neural-net}. The loss function used is Mean Squared Error (MSE) loss as proposed in the original paper.
 
 \begin{table*}[h]
-\centering
-\begin{tabular}{@{}lrrl@{}}
-\hline
-Layer Type & Input Dimension & Output Dimension & Non-Linearity \\
-\hline
-Linear & 256 & 128 & ReLU \\
-Linear & 128 & 64 & ReLU \\
-Linear & 64 & 8 & ReLU \\
-Linear & 8 & 2 & Sigmoid \\
-\hline
-\end{tabular}
-\caption{The architecture for generating the relation score using function $g_\theta$.}
-\label{table:relation-neural-net}
+	\centering
+	\begin{tabular}{@{}lrrl@{}}
+	\hline
+	Layer Type & Input Dimension & Output Dimension & Non-Linearity \\
+	\hline
+	Linear 	& 256 	& 128 	& ReLU \\
+	Linear 	& 128 	& 64 	& ReLU \\
+	Linear 	& 64 	& 8 	& ReLU \\
+	Linear 	& 8 	& 2 	& Sigmoid \\
+	\hline
+	\end{tabular}
+	\caption{The architecture for generating the relation score using function $g_\theta$.}
+	\label{table:relation-neural-net}
 \end{table*}
 
-We sample a total of 128 query molecules for each episode, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. We reproduce the work of \citet{altae2017low} from scratch and also apply the IterRefLSTM to the embeddings from all other networks to effectively compare our contribution to past work. Additionally, we also provide implementations for the Prototypical Networks and Relation Networks. All the experiments are run on Google Colaboratory and all implementations are open-sourced on GitHub.\footnote{Accessed From: https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}. As is emphasised by \citet{vinyals2016matching} and \citet{snell2017prototypical}, training and testing conditions should match when doing few-shot learning. Therefore, the same support set composition used to train the model is used during test time. For example, if during training we do 10-shot learning, testing is carried out with 10-shot support sets. We remind the reader that testing is carried out on a new, previously unseen target. After the support set has been sampled, the rest of the data for the target being tested is used as query/test data. This process is repeated 20 times, and the mean and standard deviation of the ROC and PRC scores from these 20 rounds are reported as the final classification result.
+We sample a total of 128 query molecules for each episode, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. We reproduce the work of \citet{altae2017low} from scratch and also apply the IterRefLSTM to the embeddings from all other networks to effectively compare our contribution to past work. Additionally, we also provide implementations for the Prototypical Networks and Relation Networks. All the experiments are run on Google Colaboratory and all implementations are open-sourced on GitHub\footnote{Accessed From: \url{https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}}. As  emphasised by \citet{vinyals2016matching} and \citet{snell2017prototypical}, training and testing conditions should match when doing few-shot learning. Therefore, the same support set composition used to train the model is used during test time. For example, if we train using 10-shot learning, testing is carried out with 10-shot support sets. We remind the reader that testing is carried out on a new, previously unseen target. After the support set has been sampled, the rest of the data for the target being tested is used as query data. This process is repeated 20 times, and the mean and standard deviation of the ROC-AUC and PR-AUC scores from these 20 rounds are reported as the final classification result.
 
 \subsubsection{Evaluation}
 
-The evaluation metrics used in this study are the Area Under Curve (AUC) of the Receiver Operating Characteristic (ROC) curve, and the Precision-Recall Curve (PRC). The state-of-the-art \cite{altae2017low} only reports ROC results, however, this metric alone does not fully encompass the nature of the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, the detection of rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC are used to evaluate how well the model can classify the active class. The former is related to a low false negative rate, meaning active compounds incorrectly classified as inactive/decoys, while high precision is attributed by a low false positive rate, meaning compounds classified as active when in fact they are inactive/decoys. The ideal scenario for predicting the minority active class is thus one where we achieve high recall and high precision. Given that the active class is in such a minority, even a small false positive rate could result in high numbers of false positives, due to the high number of the negative class examples. We apply statistical analysis on the ROC and PRC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against those of the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}. The tabulated results are the mean values from 20 randomly sampled test rounds, encompassing all the test targets, along with the standard deviation for each mean. The results for each individual target is available in the appendices.
+The evaluation metrics used are the Area Under Curve (AUC) of the Receiver Operating Characteristic (ROC) curve, and the Precision-Recall Curve (PRC). To determine the predictive power of our classifier, we make use of the ROC Area Under Curve (AUC) (ROC-AUC) as this provides a clearer picture of the relationship between the true positive and the false positive rate. The ROC-AUC affords a more nuanced approach than accuracy as it provides visibility into thresholds one can utilise to ameliorate predictions. \citet{altae2017low} only report ROC-AUC results, however, this metric alone does not adequately measure the nature of the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, the detection of rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC is used to evaluate how well the model can classify the active class
+
+We apply statistical analysis on the ROC-AUC and PR-AUC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against those of the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}.
