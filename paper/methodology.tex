@@ -142,17 +142,78 @@ A linear transformation is applied to the output from the readout layer, followe
 
 \subsubsection{Benchmark Models}
 
-We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining data for the designated target is used for testing.
+We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The designated architecture for the graph convolution network is outlined in Table~\ref{table:benchmarkArchi}. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining data for the designated target is used for testing.
 
 We also carry out a final benchmark test in retrospect by taking a random selection of query molecules from a test target, generating the ECFP with the same aforementioned parameters and then calculating the Tanimoto distance to classify the remaining test molecules based on this distance. However, we find that this does not hold any significant predictive capability. 
 
+\begin{table}
+	\centering
+	\begin{tabular}{@{}lrrl@{}}
+	\hline
+	\textbf{Layer} & \textbf{Input Dimension} & \textbf{Output Dimension} & \textbf{Non-Linearity} \\
+	\hline
+	GraphConv & 177 & 64 & Relu \\
+	Max Pooling & 64 & 64 &  \\
+	GraphConv & 64 & 128 & Relu \\
+	Max Pooling & 64 & 64 &  \\
+	GraphConv & 128 & 64 & Relu \\
+	Max Pooling & 64 & 64 &  \\
+	Sum Pooling & 64 & 64 & TanH \\
+	Linear & 64 & 128 & TanH \\
+	Linear & 128 & 1 & Sigmoid \\
+	\hline
+	\end{tabular}
+	\caption{Benchmark Neural Network for Few-Shot Learning}
+	\label{table:benchmarkArchi}
+	\end{table}
+
 \subsubsection{Few-Shot Learning Models}
 
-%% TODO @@ DV to add actual architectures of each of the four models ... and to trim (aggressively) the below since it is repetitive with Episodic Section in the Methodology
+\subsubsection{Siamese Networks}
 
-Episodic learning is used to train a few-shot machine learning model. \citet{vinyals2016matching} suggest that conditions during training must match those during testing. Training consists of a sequence of learning problems where the model is supplied with a \textit{support} set and a corresponding \textit{query} set. The support set consists of a few molecules sampled from each class, in our case representing the active molecules and the inactives/decoys. We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules. \textit{N} is always assigned a value of two as we are attempting to solve a binary classification problem, whereby the model tries to classify the query molecules as active or inactive in a specific experimental assay. We experimented with a varying number of molecules for the support sets, however the minimum limit was set to one compound per class, while the maximum was set to 10 compounds per class. The \textit{2-way N-shot} formulation is what the model is presented with at test time. We sample a total of 128 query molecules for each episode, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. We reproduce the work of \citet{altae2017low} from scratch and also apply the IterRefLSTM to the embeddings from all other networks to effectively compare our contribution to past work. Additionally, we also provide implementations for the Prototypical Networks and Relation Networks. All the experiments are run on Google Colaboratory and all implementations are open-sourced on GitHub.\footnote{Accessed From: https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}
+Siamese networks \citep{koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples as inputs. The outputs from the networks are compared to learn the relationship between them. The following is the process employed for learning a classifier using Siamese Networks. The process is repeated for all training tasks.
 
-%% -----------------------------------------------------------------
+\begin{enumerate}
+    \item Generate a list of all possible pairs between training data. If both data samples in the pair have the same target, the pair's label is set to 1, and 0 if otherwise.
+    \item Create a twin network using the \ac{GNN} architecture to embed two molecular graph inputs into latent space.
+    \item Calculate the L1 distance between the molecule embeddings. This is achieved by calculating the absolute difference between the embeddings $|mol_i-mol_j|$.
+    \item The distance between the two embeddings is passed through a linear feedforward layer with 128 nodes and an output of 2, followed by a sigmoid function to output the probability.
+    \item As we are dealing with binary classification, the binary cross entropy loss is calculated and back-propagated to the network.
+\end{enumerate}
+
+\subsubsection{Matching Networks}
+
+Matching Networks builds on Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity between pairs of data points between the support and query sets is computed, which is then normalised by a Softmax function. As proposed in \citet{vinyals2016matching}, Fully Contextual Embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability of embedding the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, taking as input the whole support set to adjust the embedding based on the other support samples.
+
+Two functions are defined. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$, using a bidirectional LSTM. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over 10 processing "read" steps, until eventually the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. Throughout each iteration, the hidden state and the output from the attention function are added together. To train the network using stochastic gradient descent, the cross entropy loss is computed for each query prediction.
+
+\subsubsection{Prototypical Networks}
+
+Prototypical Networks \citep{snell2017prototypical} have similarities to the Matching Networks described above, but instead of considering the individual support set embeddings, the mean vector of the embeddings for each class within the support set is taken. This mean vector for each class is referred to as the \textit{prototype}. Another improvement the authors of the original paper make over Matching Networks \citep{vinyals2016matching}, is the use of Euclidean distance rather than the Cosine distance. In order to classify query data samples, the softmax of the inverse of the euclidean distances between each query and each prototype is taken. To train the network through stochastic gradient descent, the negative log likelihood loss is used. 
+
+\subsubsection{Relation Networks}
+
+For the Relation Networks \citep{sung2018learning}, the classification of query samples is not done directly in latent space from the embeddings. The embeddings for the support and query samples are generated using the \ac{GNN}. Following this step, the feature maps concatenations are created by concatenating the query samples with each data sample within the support set. The feature map concatenation therefore has a size double the length of the embedding generated by the \ac{GNN}.
+
+The relationship between the queries and the different classes within the support set is captured by passing these feature map concatenations through a feed forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. $[ , ]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The architecture of this function is defined in Table \ref{table:relation-neural-net}. The loss function used is Mean Squared Error (MSE) loss as proposed in the original paper.
+
+\begin{table*}[h]
+\centering
+\begin{tabular}{@{}lrrl@{}}
+\hline
+Layer Type & Input Dimension & Output Dimension & Non-Linearity \\
+\hline
+Linear & 256 & 128 & ReLU \\
+Linear & 128 & 64 & ReLU \\
+Linear & 64 & 8 & ReLU \\
+Linear & 8 & 2 & Sigmoid \\
+\hline
+\end{tabular}
+\caption{The architecture for generating the relation score using function $g_\theta$.}
+\label{table:relation-neural-net}
+\end{table*}
+
+We sample a total of 128 query molecules for each episode, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. We reproduce the work of \citet{altae2017low} from scratch and also apply the IterRefLSTM to the embeddings from all other networks to effectively compare our contribution to past work. Additionally, we also provide implementations for the Prototypical Networks and Relation Networks. All the experiments are run on Google Colaboratory and all implementations are open-sourced on GitHub.\footnote{Accessed From: https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}. As is emphasised by \citet{vinyals2016matching} and \citet{snell2017prototypical}, training and testing conditions should match when doing few-shot learning. Therefore, the same support set composition used to train the model is used during test time. For example, if during training we do 10-shot learning, testing is carried out with 10-shot support sets. We remind the reader that testing is carried out on a new, previously unseen target. After the support set has been sampled, the rest of the data for the target being tested is used as query/test data. This process is repeated 20 times, and the mean and standard deviation of the ROC and PRC scores from these 20 rounds are reported as the final classification result.
 
 \subsubsection{Evaluation}
 
