@@ -44,7 +44,7 @@ In this work, we make use of the following three datasets;
     
     \item \textbf{Maximum Unbiased Validation (MUV)} \citep{rohrer2009maximum} -- Based on PubChem BioAssays, used for validating virtual screening techniques against 17 different targets \citep{rohrer2009maximum}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: \url{https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/muv.csv.gz}. Last Accessed: 26/05/2022} in CSV format. A total of 12 targets (MUV-466, MUV-548, MUV-600, MUV-644, MUV-652, MUV-689, MUV-692, MUV-712, MUV-713, MUV-733, MUV-737, and MUV-810) are reserved for training, while MUV-832, MUV-846, MUV-852, MUV-858, and MUV-859 are reserved for testing.
     
-    \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} -- Used for benchmarking virtual screening techniques by introducing a number of active compounds against specific targets. For each active, a number of \textit{decoys} with similar physical properties, but different topologies, are made available. For this research study, we made use of the GPCR subset of the DUD-E dataset \citep{mysinger2012directory}. The data was obtained directly from the DUD-E website.\footnote{Accessed from: \url{http://dude.docking.org/subsets/gpcr}. Last Accessed: 26/11/2022} The AA2AR, DRD3, and ADRB1 targets are used for training. Two targets, ADRB2 and CXCR4, are reserved for testing.
+    \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} -- Used for benchmarking virtual screening techniques by introducing a number of active compounds against specific targets. For each active, a number of \textit{decoys} with similar physical properties, but different topologies, are made available. For this research study, we made use of the GPCR subset of the DUD-E dataset \citep{mysinger2012directory}. The data was obtained directly from the DUD-E website.\footnote{Accessed from: \url{http://dude.docking.org/subsets/gpcr}. Last Accessed: 26/05/2022} The AA2AR, DRD3, and ADRB1 targets are used for training. Two targets, ADRB2 and CXCR4, are reserved for testing.
 \end{itemize}
 
 Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datasets, highlighting the scarceness of data on active compounds in this domain. Due to this class imbalance we select appropriate performance metrics (see Evaluation Section).
@@ -253,3 +253,48 @@ We sample a total of 128 query molecules for each episode, which is composed of 
 The evaluation metrics used are the Area Under Curve (AUC) of the Receiver Operating Characteristic (ROC) curve, and the Precision-Recall Curve (PRC). To determine the predictive power of our classifier, we make use of the ROC Area Under Curve (AUC) (ROC-AUC) as this provides a clearer picture of the relationship between the true positive and the false positive rate. The ROC-AUC affords a more nuanced approach than accuracy as it provides visibility into thresholds one can utilise to ameliorate predictions. \citet{altae2017low} only report ROC-AUC results, however, this metric alone does not adequately measure the nature of the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, the detection of rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC is used to evaluate how well the model can classify the active class
 
 We apply statistical analysis on the ROC-AUC and PR-AUC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against those of the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}.
+
+\section{Implementation Details}
+
+These models were developed using Python 3.7. Most packages were installed using Pip 21.0.1, however, Conda 4.10.3 was also used to install packages not found on the Python Package Index (PyPi)\footnote{Accessed from: \url{https://pypi.org/}. Last Accessed: 26/05/2022}. Pip and conda are package management systems for Python, allowing users to conveniently install and run packages and their dependencies. The specific versions of each toolkit are specified in Table~\ref{tab:versions}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}lll@{}}
+		\hline
+		\textbf{Package} & \textbf{Version} & \textbf{Description} \\
+		\hline
+		PyTorch & 1.9.0 & Machine learning framework \\
+		Scikit-Learn & 1.0.1 & Machine Learning Library \\
+		Deep Graph Library (DGL) & 0.7.2 & Deep learning on graphs \\
+		DGL-LifeSci & 0.2.8 & Cheminformatics graph functions \\
+		RDKit & 2021.09.2 & Cheminformatics Toolkit \\
+		DeepChem & 2.6.0.dev & Cheminformatics Machine Learning \\
+		Pandas & 1.1.5 & Data manipulation and preparation \\
+		Numpy & 1.19.5 & Adds support for multi-dimensional arrays \\
+		ChemBL Structure Pipeline & 1.0.0 & Used to standardise molecules \\
+		NetworkX & 2.6.3 & Used to visualise graphs \\
+		TQDM & 4.59 & Progress bars library \\
+		SciPy & 1.7.1 & Statistical Analysis \\
+		\hline
+	\end{tabular}
+	\caption{Python libraries utilised for this project.}
+	\label{tab:versions}
+\end{table}
+
+All the experiments were run on Google Colaboratory\footnote{Accessed from: \url{https://colab.research.google.com/}. Last Accessed: 26/05/2022}, Colab in short. Colab is a hosted Jupyter notebook\footnote{Accessed from: \url{https://jupyter.org/}. Last Accessed: 26/05/2022} service, providing access to computational resources including CPUs and GPUs to run Python code. These Colab notebooks can be shared, accessed, and run in web-browsers.  The Colab instance details are specified in Table~\ref{tab:hardware}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{@{}lll@{}}
+		\hline
+		\textbf{Type} & \textbf{Model} & \textbf{Details} \\
+		\hline
+		CPU & Intel (R) Xeon & 2.20Ghz 4 Cores \\
+		GPU & Nvidia Tesla P100 & 16GB using Cuda 11.1 \\
+		RAM & N/A & 25GB \\
+		\hline
+	\end{tabular}
+	\caption{Hardware provisioned in Google Colab.}
+	\label{tab:hardware}
+\end{table}
