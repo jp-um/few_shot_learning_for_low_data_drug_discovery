@@ -1,6 +1,6 @@
 \section{Results}
 
-In this section we present the few-shot model results for the three evaluation datasets, Tox21, MUV, and DUD-E. %% @@ DV zejjen!
+In this section we present the few-shot model results for the three evaluation datasets, Tox21, MUV, and DUD-E. All these datasets are highly imbalanced, where the inactive/decoys greatly outnumber the number of actives. This defining feature of these datasets presents a challenging problem, but is also further evidence that low-data machine learning is highly beneficial in this domain. We first present the work we reproduced from \citet{altae2017low}, which we also test on a subset of the DUD-E dataset, which was not explored in the original study. The reproduced work includes Siamese Networks \citep{koch2015siamese} and the Matching Networks \citep{vinyals2016matching} with the Iterative Refinement LSTM (IterRefLSTM), which obtained the best results in \citet{altae2017low}. This is followed by the presentation and discussion of the results for two newly proposed machine learning models in this domain, which are based on work of \citet{vinyals2016matching} for Matching Networks. These machine learning models include the Prototypical \citep{snell2017prototypical} and Relation \citep{sung2018learning} Networks. Finally, we evaluate the results with the state of the art, which is identified to be the work of \citet{altae2017low}.
 
 \subsection{Tox21}
 
