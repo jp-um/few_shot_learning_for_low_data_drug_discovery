@@ -179,6 +179,13 @@ We also carry out a final benchmark test in retrospect by taking a random select
 
 The generated molecular embeddings from the GCN are used as inputs for the few-shot learning architectures. The models discussed in this section, excluding the benchmark model, use the embeddings generated from the GCN, grouped in support and query sets, to learn the kernel function. These models include Siamese Networks, Matching Networks, Prototypical Networks and Relation Networks. Table \ref{table:relation-neural-net} tabulates the network used to generate the relation score in the Relation Networks architecture. To be able to compare the model's effectiveness objectively, the GCN architecture remains unchanged in all experiments.
 
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{img/Schematic Training.png}
+	\caption{Schematic to explain few-shot learning machine learning on a molecular dataset, which shows that the same molecules can be used during training and testing, however, these molecules would impart different information based on the target. The targets used in testing are previously unseen, except for the few molecules sampled in the support set (S\textsubscript{1-3}) which are used to fine tune the ML model and impart some information about Target D. Query molecule Q\textsubscript{1} is sampled from Target D to be predicted using the ML model.}
+	\label{fig:schematic-training}
+\end{figure}
+
 \begin{table*}[h]
 	\centering
 	\begin{tabular}{@{}lrrl@{}}
