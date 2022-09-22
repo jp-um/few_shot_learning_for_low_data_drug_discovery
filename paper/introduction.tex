@@ -44,7 +44,7 @@ In the equivariant layer $B$, we can take the nodes in our domain and apply a fu
 
 \subsection{Metric-based Few-Shot Learning}
 
-The success of a few-shot learning model for metric-based meta-learning is dependent on the effectiveness of a kernel $k_\theta$, which measures the similarity between data samples ${x..x_i}$ from a support set $S$ (see Equation \ref{kernel}) using a metric or distance function. The techniques employed in this study, excluding the benchmark model, use the support and query embeddings generated from the graph neural network to learn the kernel function.
+The success of a few-shot learning model for metric-based meta-learning is dependent on the effectiveness of a kernel $k_\theta$, which measures the similarity between data samples ${x..x_i}$ from a support set $S$ (see Equation \ref{kernel}) using a metric or distance function. The techniques employed in this study, excluding the benchmark model, use the support and query embeddings generated from the graph neural network to learn the kernel function. We explore a number of few-shot learning models in this study, which are presented in the Methodology section. These include Siamese Networks, Matching Networks (the state-of-the-art), Prototypical Networks and Relation Networks. The two latter networks, are new approaches for this problem domain and are mostly inspired from the computer vision domain.
 
 \begin{equation}
 	\label{kernel}
@@ -53,7 +53,7 @@ The success of a few-shot learning model for metric-based meta-learning is depen
 
 \subsubsection{Siamese Networks}
 
-Siamese networks \cite{bromley1993signature, koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples as inputs. As the neural networks share weights, the feature extraction is maintained to the same feature space for both inputs. These identical subnetworks are finally connected in a final layer that acts as a distance function for the two outputs.
+Siamese networks \citep{koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The outputs from the networks are compared to learn the relationship between them. The following is the process employed for learning a classifier using Siamese Networks. The process is repeated for all training tasks.
 
 \begin{figure}[h]
 	\centering
@@ -62,9 +62,17 @@ Siamese networks \cite{bromley1993signature, koch2015siamese} are composed of tw
 	\label{fig:siamesenetarchi}
 \end{figure}
 
+\begin{enumerate}
+    \item Generate a list of all possible pairs between training data. If both data samples in the pair have the same target, the pair's label is set to 1, and 0 if otherwise.
+    \item Create a twin network using the GCN architecture to embed two molecular graph inputs into latent space.
+    \item Calculate the L1 distance between the molecule embeddings. This is achieved by calculating the absolute difference between the embeddings $|mol_i-mol_j|$.
+    \item The distance between the two embeddings is passed through a linear feedforward layer with 128 nodes and an output of 2, followed by a sigmoid function to output the probability that the two molecules belong to the same class.
+    \item As we are dealing with binary classification, the binary cross-entropy loss is calculated and backpropagated to the network.
+\end{enumerate}
+
 \subsubsection{Matching Networks}
 
-Matching Networks \cite{vinyals2016matching} build on Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity between pairs of data points between the support and query sets is computed, which is then normalised by a softmax function. The attention mechanism $a$ in $\hat{y} = \sum_{i=1}^{n} a(\hat{x}, x_i)y_i$ specifies how similar $\hat{x}$ is to each example $x$ in $S$.
+Matching Networks build on Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention-weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity of pairs of data points between the support and query sets is computed, which is then normalised by a softmax function. The attention mechanism $a$ in $\hat{y} = \sum_{i=1}^{n} a(\hat{x}, x_i)y_i$ specifies how similar $\hat{x}$ is to each example $x$ in $S$.
 
 \begin{figure}[!ht]
 	\centering
@@ -73,12 +81,13 @@ Matching Networks \cite{vinyals2016matching} build on Siamese Networks, but inst
 	\label{fig:matchingnets}
 \end{figure}
 
-Figure~\ref{fig:matchingnets} illustrates the Matching Nets architecture. Embedding functions $f$ and $g$ are Convolutional Neural Networks (CNNs) \citep{lecun1995convolutional}, potentially being identical to each other, which project the inputs to the feature space. \citet{vinyals2016matching} also propose full context embedding functions, which take as input the whole support set with the element $x_i$, thus resulting in \( g(x_i, S) \). Full context embeddings effectively modify how the element is embedded with respect to the whole support set $S$. A bidirectional LSTM is used to encode $x_i$ in the context of the support set. The attention mechanism $a$, at the end of the pipeline, is the classifier which takes a softmax over the cosine distance of the embeddings. 
+Figure~\ref{fig:matchingnets} illustrates the Matching Nets architecture. Embedding functions $f$ and $g$ are Convolutional Neural Networks (CNNs) \citep{lecun1995convolutional}, potentially being identical to each other, which project the inputs to the feature space. \citet{vinyals2016matching} also propose full context embedding functions, which take as input the whole support set with the element $x_i$, thus resulting in \( g(x_i, S) \). Full context embeddings effectively modify how the element is embedded with respect to the whole support set $S$. A bidirectional LSTM is used to encode $x_i$ in the context of the support set. The attention mechanism $a$, at the end of the pipeline, is the classifier which takes a softmax over the cosine distance of the embeddings. As proposed in \citet{vinyals2016matching}, fully contextual embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability of embedding the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, taking as input the whole support set to adjust the embedding based on the other support samples.
 
+Two functions are defined. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$, using a bidirectional LSTM. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over ten processing ``read'' steps, until eventually the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. Throughout each iteration, the hidden state and the output from the attention function are added together. To train the network using stochastic gradient descent, the cross-entropy loss is computed for each query prediction during training.
 
 \subsubsection{Prototypical Networks}
 
-Prototypical Networks, proposed by \citet{snell2017prototypical}, are similar to Matching Networks. Instead of comparing the query support to each support data point, a \textit{prototype} is calculated, which takes all the support data points per class and creates an embedding by averaging over the embeddings related to each class, thus creating the \textit{prototypes}. The Euclidean distance between the query data point and the prototypes is calculated to classify the query (see Figure~\ref{fig:protonets}). In a one-shot learning scenario, Prototypical Networks are equivalent to Matching Networks, however, the Euclidean distance is used instead of the Cosine distance used in Matching Networks.
+Prototypical Networks \citep{snell2017prototypical} have similarities to the Matching Networks described above, but instead of considering the individual support set embeddings, the mean vector of the embeddings for each class, referred to as the \textit{prototype}, within the support set is taken. Another improvement the authors make over Matching Networks, is the use of Euclidean rather than the cosine distance to calculate the distances to classify the query (see Figure~\ref{fig:protonets}). In order to classify query data samples, the softmax of the inverse of the euclidean distances between each query and each prototype is taken. To train the network through stochastic gradient descent, the negative log-likelihood loss is used. 
 
 \begin{figure}[!ht]
 	\centering
@@ -90,6 +99,8 @@ Prototypical Networks, proposed by \citet{snell2017prototypical}, are similar to
 \subsubsection{Relation Networks}
 
 \citet{sung2018learning} present the Relation Network, a framework for few-shot learning, which could also be extended to zero-shot learning. The Relation Network learns a non-linear distance metric to compare support and query examples. As opposed to the aforementioned networks, this network uses a feed-forward neural network to learn a distance function in feature space. After embedding the support and query examples through an embedding function, each query example is concatenated with each of the feature maps. The resulting feature map concatenations are processed using a convolutional neural network to output a relation score vector, from which the class can be inferred (see Figure~\ref{fig:relationnets}).
+
+The relationship between the queries and the different classes within the support set is captured by passing the feature map concatenations through a feed forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The architecture of this function is defined in Table~\ref{table:relation-neural-net}. The loss function used is Mean Squared Error (MSE) loss as proposed in the original paper.
 
 \begin{figure}[h]
 	\centering
