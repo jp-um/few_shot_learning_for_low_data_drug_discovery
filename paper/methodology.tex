@@ -1,6 +1,5 @@
 \section{Methodology}
 
-
 In this work, we implement a Random Forest and a Graph Convolutional Network (GCN) to use as benchmark models. Additionally, we implement four few-shot machine learning architectures, namely, Siamese Networks, Matching Networks, Prototypical Networks, and Relation Networks. The state of the art, IterRefLSTMs \citep{altae2017low}, are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects, which are then processed using GCNs to produce a vectorised embedding in computational space. Throughout our work, we try to follow the implementation of \citet{altae2017low} as closely as possible for the sake of reproducibility and homogenising the results for comparison.
 
 \subsection{Machine Learning Pipeline}
@@ -30,7 +29,7 @@ The machine learning pipeline for this study consists of nine main parts, which 
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.9\linewidth]{img/architecture-schematic.png}
-	\caption[Schematic of the major parts in our architecture]{Schematic of the machine learning pipeline designed for this study. The changes across few-shot learning architectures lies in the `Train Few-Shot Learning Model' component, otherwise, all other modules remain identical.}
+	\caption[Schematic of the major parts in our architecture]{Schematic of the machine learning pipeline designed for this study. The changes across few-shot learning architectures lies in the `Train Few-Shot Learning Model' component, otherwise, all other modules remain identical. Figure \ref{fig:schematiconeshotdrug} visualises the GCN learned embedding as \textit{g}' and \textit{f}', and the few-shot learning steps as \textit{g, f, k}.}
 	\label{fig:architecture-schematic}
 \end{figure}
 
@@ -64,26 +63,15 @@ Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datase
 	\label{table:datasetimbalance}
 \end{table}
 
-
-
 \subsection{Molecular Representations}
 
 We first standardise the molecules according to a set of well-defined and consistent rules and conventions. It is of utmost importance to maintain uniformity and integrity across the different datasets (and sources) being used. \citet{bento2020open} present an open source chemical structure curation pipeline based on RDKit\citep{rdkit} for validating and standardising chemical structures, which follow FDA/IUPAC guidelines \citep{brecher2006graphical, food2007substance}. Their work is available in the ChEMBL Structure Pipeline package \cite{bento2020open} and is used to standardise the molecules in our pipeline. 
 
 We create a molecular graph from the SMILES string of the standardized molecule using RDKit, an open-source toolkit for cheminformatics. We then one-hot encode eight features for the atoms in each molecule, namely, atom type, atomic number, atom degree, explicit valence, hybridisation, formal charge, number of radical electrons, and aromaticity. Self loops are added to every node in the generated graph, so aggregation functions during message passing consider the features of the node itself. The order of the atoms follows the canonical order of the atoms assigned through RDKit. We make use of the Deep Graph Library (DGL) LifeSci \cite{dgllife} library to create the graph objects and subsequently process them using the DGL library \cite{wang2019dgl}.
 
-
-
 \subsection{Episodic Learning}
 
-Figure~\ref{fig:episodiclearning} illustrates a high-level overview of the episodic learning methodology. Training for few-shot learning is carried out in a series of episodes, framed as \textit{N-way K-shot} classification tasks. We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules. These classification tasks match the conditions at training time with those during testing, as proposed by \citet{vinyals2016matching}. The tasks in our research are binary classification tasks, therefore \textit{N} is always set to two to represent the active and the inactive/decoy class respectively. Experiments with varying values of \textit{K} are carried out to generate the support sets, with a minimum of one data point, to a maximum of ten data points (molecules) per class. The combinations for \textit{K} active and inactive/decoy classes are not exhaustive, but we follow the support set composition used in \citet{altae2017low} to directly compare results with this study.
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=0.9\linewidth]{img/episodic-learning.png}
-	\caption{Episodic learning schematic}
-	\label{fig:episodiclearning}
-\end{figure}
+Training for few-shot learning is carried out in a series of episodes, as shown in Figure \ref{fig:architecture-schematic}, framed as \textit{N-way K-shot} classification tasks. We consider \textit{N-way K-shot} classification tasks, where the support set contains \textit{N} classes and \textit{K} labelled molecules. These classification tasks match the conditions at training time with those during testing, as proposed by \citet{vinyals2016matching}. The tasks in our research are binary classification tasks, therefore \textit{N} is always set to two to represent the active and the inactive/decoy class respectively. Experiments with varying values of \textit{K} are carried out to generate the support sets, with a minimum of one data point, to a maximum of ten data points (molecules) per class. The combinations for \textit{K} active and inactive/decoy classes are not exhaustive, but we follow the support set composition used in \citet{altae2017low} to directly compare results with this study.
 
 Table~\ref{table:support-set-sizes} contains the composition of the support sets used in our experiments. For each episode, we sample a total of 128 query molecules, which is composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. The choice of the support set composition was based on the methodology presented in \citet{altae2017low}.
 
@@ -104,8 +92,6 @@ Table~\ref{table:support-set-sizes} contains the composition of the support sets
 	\label{table:support-set-sizes}
 \end{table}
 
-
-
 \subsection{Machine Learning Models}
 
 Before processing the molecular graph, the model first learns an embedding using graph neural networks. Four different architectures, including Siamese, Matching, Prototypical and Relation Networks, process the learned graph embeddings to train our meta-learner. IterRefLSTMs are utilised to refine the latent space embeddings. 
@@ -119,7 +105,7 @@ Before processing the molecular graph, the model first learns an embedding using
 
 \subsubsection{Graph Convolutional Networks}
 
-Graph convolutional networks (GCNs) are used to learn embeddings for the support and query molecules in latent space. Figure~\ref{fig:dvgcnarchi} illustrates the GCN pipeline to learn a molecular embedding. In our study, we make use of the convolutional operator from \citet{kipf2016semi} to process graphs and learn the molecular embeddings.
+Graph convolutional networks (GCNs) are used to learn embeddings for the support and query molecules in latent space. The SMILE molecules are first converted to graph representations, and these are in turn embedded as vectors in latent space using GCNs and a final dense neural network. Figure~\ref{fig:dvgcnarchi} illustrates the GCN pipeline to learn a molecular embedding. In our study, we make use of the convolutional operator from \citet{kipf2016semi} to process graphs and learn the molecular embeddings. We note that back-propagation occurs throughout the whole few-shot learning process, in which the GCNs are part of. The assays used in testing are never used during training, however, the molecules used in testing can be encountered during training, however, for different experimental assays. While related as they are included in the same dataset for a specific task (e.g. Tox21 data), these assays are not identical.
 
 \begin{equation}
 	\label{gcnequation2}
@@ -140,7 +126,7 @@ Three convolutional layers are present in our architecture, after which a maximu
 	r^{(i)} = \sum_{k=1}^{N_i} x^{(i)}_k
 \end{equation}
 
-A linear transformation is applied to the output from the readout layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure~\ref{fig:dvgcnarchi2}.
+A linear transformation is applied to the output from the readout layer, followed by a non-linear activation function, for which we use a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure~\ref{fig:dvgcnarchi}.
 
 \begin{table}
 	\centering
@@ -162,16 +148,9 @@ A linear transformation is applied to the output from the readout layer, followe
 	\label{table:gcn-architecture}
 \end{table}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=1\linewidth]{img/gcn-layers.png}
-	\caption[Layers for graph processing in our GCN.]{Graph processing layers in our GCN implementation. The graph convolution layers apply operations on each individual node's feature maps based on neighbouring nodes. The ReLU function is applied after each convolutional layer, and the tanh function is applied after the final readout layer.}
-	\label{fig:dvgcnarchi2}
-\end{figure}
-
 \subsubsection{Benchmark Models}
 
-We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The designated architecture for the graph convolution network is outlined in Table~\ref{table:benchmarkArchi}. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining data for the designated target is used for testing.
+We make use of a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. For the random forest model, ECFP representations of the molecules of size 2,048 bits are used for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The designated architecture for the graph convolution network is outlined in Table~\ref{table:benchmarkArchi}. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow, and outputs a feature of size one, onto which we apply a non-linear function, in this case a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the active or inactive/decoy class in the experimental assay. These two models are trained on a small support set, sampled from the targets assigned for testing. The remaining molecules, which are not utilised for training, are used to predict the respective class.
 
 We also carry out a final benchmark test in retrospect by taking a random selection of query molecules from a test target, generating the ECFP with the same aforementioned parameters and then calculating the Tanimoto distance to classify the remaining test molecules based on this distance. However, we find that this does not hold any significant predictive capability. 
 
@@ -198,37 +177,7 @@ We also carry out a final benchmark test in retrospect by taking a random select
 
 \subsubsection{Few-Shot Learning Models}
 
-The generated molecular embeddings from the GCN are passed to the few-shot learning architectures. The success of a few-shot learning model for metric-based meta-learning is dependent on the effectiveness of the kernel $k_\theta$, which measures the similarity between data samples using a metric or distance function. The models discussed in this section, excluding the benchmark model, use the embeddings generated from the GCN, presented in the support and query sets, to learn the kernel function.
-
-To be able to compare the model's effectiveness objectively, the GCN architecture remains unchanged in all experiments, including the benchmark.
-
-\subsubsection{Siamese Networks}
-
-Siamese networks \citep{koch2015siamese} are composed of two identical networks, with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The outputs from the networks are compared to learn the relationship between them. The following is the process employed for learning a classifier using Siamese Networks. The process is repeated for all training tasks.
-
-\begin{enumerate}
-    \item Generate a list of all possible pairs between training data. If both data samples in the pair have the same target, the pair's label is set to 1, and 0 if otherwise.
-    \item Create a twin network using the GCN architecture to embed two molecular graph inputs into latent space.
-    \item Calculate the L1 distance between the molecule embeddings. This is achieved by calculating the absolute difference between the embeddings $|mol_i-mol_j|$.
-    \item The distance between the two embeddings is passed through a linear feedforward layer with 128 nodes and an output of 2, followed by a sigmoid function to output the probability that the two molecules belong to the same class.
-    \item As we are dealing with binary classification, the binary cross-entropy loss is calculated and backpropagated to the network.
-\end{enumerate}
-
-\subsubsection{Matching Networks}
-
-Matching Networks extends Siamese Networks, but instead of learning a metric function over pairs of data, the classifier learns how to define a probability distribution of output labels from query/test examples using a support set $S$. The classifier outputs a sum of attention-weighted labels from the support set to predict the similarity between the test example and the samples from the support set. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity of pairs of data points between the support and query sets is computed, which is then normalised by a softmax function. As proposed in \citet{vinyals2016matching}, Fully Contextual Embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability of embedding the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, taking as input the whole support set to adjust the embedding based on the other support samples.
-
-Two functions are defined. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$, using a bidirectional LSTM. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over ten processing ``read'' steps, until eventually the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. Throughout each iteration, the hidden state and the output from the attention function are added together. To train the network using stochastic gradient descent, the cross-entropy loss is computed for each query prediction.
-
-\subsubsection{Prototypical Networks}
-
-Prototypical Networks \citep{snell2017prototypical} have similarities to the Matching Networks described above, but instead of considering the individual support set embeddings, the mean vector of the embeddings for each class within the support set is taken. This mean vector for each class is referred to as the \textit{prototype}. Another improvement the authors make over Matching Networks, is the use of Euclidean rather than the cosine distance. In order to classify query data samples, the softmax of the inverse of the euclidean distances between each query and each prototype is taken. To train the network through stochastic gradient descent, the negative log-likelihood loss is used. 
-
-\subsubsection{Relation Networks}
-
-For the Relation Networks \citep{sung2018learning}, the classification of query samples is not done directly in latent space from the embeddings. The embeddings for the support and query samples are generated using the GCN. Following this step, the feature maps concatenations are created by concatenating the query samples with each data sample within the support set. The feature map concatenation therefore is double the length of the embedding generated by the GCN.
-
-The relationship between the queries and the different classes within the support set is captured by passing these feature map concatenations through a feed forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The architecture of this function is defined in Table~\ref{table:relation-neural-net}. The loss function used is Mean Squared Error (MSE) loss as proposed in the original paper.
+The generated molecular embeddings from the GCN are used as inputs for the few-shot learning architectures. The models discussed in this section, excluding the benchmark model, use the embeddings generated from the GCN, grouped in support and query sets, to learn the kernel function. These models include Siamese Networks, Matching Networks, Prototypical Networks and Relation Networks. Table \ref{table:relation-neural-net} tabulates the network used to generate the relation score in the Relation Networks architecture. To be able to compare the model's effectiveness objectively, the GCN architecture remains unchanged in all experiments.
 
 \begin{table*}[h]
 	\centering
