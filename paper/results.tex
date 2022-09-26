@@ -1,128 +1,130 @@
 \section{Results}
 
-In this section we present the few-shot model results for the three evaluation datasets, Tox21, MUV, and DUD-E. All these datasets are highly imbalanced, where the inactive/decoys greatly outnumber the number of actives. This defining feature of these datasets presents a challenging problem, but is also further evidence that low-data machine learning is highly beneficial in this domain. We first present the work we reproduced from \citet{altae2017low}, which we also test on a subset of the DUD-E dataset. This was not explored in the original study. The reproduced work includes Siamese Networks \citep{koch2015siamese} and the Matching Networks \citep{vinyals2016matching} with the Iterative Refinement LSTM (IterRefLSTM). The latter obtained the best results in \citet{altae2017low}. This is followed by the presentation and discussion of the results for two newly proposed machine learning models in this domain, which are based on work of \citet{vinyals2016matching} for Matching Networks. These machine learning models include the Prototypical \citep{snell2017prototypical} and Relation \citep{sung2018learning} Networks. The Prototypical and Relation Networks have been previously explored for the computer vision domain, but to our knowledge, have never been applied to the drug discovery domain. Finally, we evaluate the results with the state of the art, which is identified to be the work of \citet{altae2017low}.
+This section presents the few-shot model results for the three evaluation datasets, Tox21, MUV, and DUD-E. All three datasets are highly imbalanced, where the inactive/decoy molecules greatly outnumber the number of actives. This imbalance presents a challenging problem but proves that low-data machine learning is highly beneficial in this domain. We first present the work we reproduced from \citet{altae2017low}, which we also use to test on a subset of the DUD-E dataset. The reproduced work includes Siamese Networks \citep{koch2015siamese} and the Matching Networks \citep{vinyals2016matching} with the IterRefLSTM. The latter obtained the best results in \citet{altae2017low} and is referred to as the state-of-the-art in this study. Further building on the Matching Networks architecture by \citet{vinyals2016matching}, we present and discuss results for two newly proposed machine learning models in this domain. These machine learning models include the Prototypical \citep{snell2017prototypical} and Relation \citep{sung2018learning} Networks. These architectures have been previously explored for the computer vision domain but, to our knowledge, have never been applied to the drug discovery domain. Finally, we evaluate the results with the state-of-the-art, which is identified to be the work of \citet{altae2017low}.
 
 
 \subsection{Tox21}
 
-In line with the results reported by \citet{altae2017low}, the few-shot learning models on Tox21 outperform the benchmark models significantly. The Matching Networks with IterRefLSTM performs well and obtain the best ROC-AUC results in a number of experiments. The fact that the same implementation for the Matching Networks (MNs) obtained slightly better results (1-14\% across the five support set experiments) than the state-of-the-art work, can be attributed to the set of atom descriptors used for the initial graph representations presented earlier. Our few-shot learning architecture implementation is identical to the work of \citet{altae2017low}, however variations in how the model learns could be present. Hence, we focus mainly on the performance of how our implementations performed against each other. The results from the Prototypical Networks (PNs) overall outperform the results from the MNs based on statistical analysis (see Table~\ref{table:Tox21-mean}). Meanwhile, MNs and PNs, overall outperform Relation Networks (RNs) in both ROC-AUC and PR-AUC performance. 
+In line with the results reported by \citet{altae2017low}, the few-shot learning models on Tox21 outperform the benchmark models significantly. The Matching Networks with IterRefLSTM performs well and obtain the best ROC-AUC results in some experiments. Our few-shot learning architecture implementation is identical to the work of \citet{altae2017low}; however, variations in how the model learns could be present. Hence, we focus mainly on how our implementations performed against each other. The results from the Prototypical Networks (PNs) overall significantly outperform the results from the MNs (the state-of-the-art approach) based on statistical analysis (see Table~\ref{table:Tox21-mean}). Meanwhile, MNs and PNs, outperform Relation Networks (RNs) in both ROC-AUC and PR-AUC performance. 
 
-Results for one shot-learning do not provide a clear-cut choice between our implementations for MNs and PNs with the IterRefLSTM, which is expected due to the architecture of these methods.  In a one-shot learning scenario, MNs and PNs are conceptually similar. The main difference lies in the distance function used as for MNs we use the cosine distance, while for PNs, we make use of the euclidean distance, as proposed in the original literature which introduced these two techniques. They both achieve comparable performance on Tox21 targets for one-shot learning. The performance of MNs for this scenario is consistent with the state-of-the-art work and for such a difficult scenario (i.e.\ learning with only one example from each class), results are promising. The \textit{prototypes} in PNs are a mean of all embeddings for each class in the support set. The euclidean distance between the \textit{prototypes} and each embedding from the query set is calculated to predict the query's activity. As in one-shot learning we only have one example per class, the \textit{prototypes} are equivalent to the embedding for each class, making this identical to the MNs. 
+Results for one-shot learning do not provide a clear-cut choice between our implementations for MNs and PNs with the IterRefLSTM. This performance is expected due to the similarity in the architecture of these methods. In a one-shot learning scenario, MNs and PNs are conceptually similar. The main difference lies in the distance function used since for MNs we use the cosine distance, while for PNs, we use the Euclidean distance, as proposed in the original literature, which introduced these two techniques. They both achieve comparable performance on Tox21 targets for one-shot learning. The performance of MNs for this scenario is consistent with the state-of-the-art and for such a problematic scenario (i.e.\ learning with only one example from each class), results are promising. The \textit{prototypes} in PNs are a mean of all embeddings for each class in the support set. The Euclidean distance between \textit{prototypes} and each embedding from the query set is calculated to predict the query's activity. As in one-shot learning we only have one example per class, the \textit{prototypes} are equivalent to the embedding for each class, making this identical to the MNs. One observation which can be made is that there is not a significant improvement in performance from one-shot learning to 10-shot learning. This uniformity may be attributed to the methodology used for training. Few-shot learning conditions during training must match the ones during testing, but during training, we use a sequence of episodes, in which each we match the few-shot conditions during testing. Having a sequence of episodes means that training sees many molecules, albeit in a few-shot scenario. Hence, the model itself may already be maximally informative due to the number of episodes it is exposed to. Thus, when we get to the testing stage, presenting one-shot or 10-shot support sets to fine-tune the model does not seem to make an impactful difference. 
 
 \begin{table}
-	\caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for the Tox21 Test Targets over 20 rounds of testing. Bold text illustrates the best obtained value. The first column shows the composition of the support set. The reproduced results from the model used in \citet{altae2017low} is the MatchingNet. The actual values are tabulated in the supporting information document in tables S1, S2, and S3.}
-	\centering
-	% \ra{1.3}
-	% {\renewcommand{\arraystretch}{1}}
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{@{}cccccccc@{}}
-			\hline
-			\textbf{Tox21} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
-			\hline
-			10+/10- & ROC-AUC & 0.617 ± 0.060 & 0.620 ± 0.065 & 0.825 ± 0.043 & 0.824 ± 0.022 & \textbf{0.826 ± 0.034} & 0.814 ± 0.030 \\ & PR-AUC & 0.158 ± 0.102 & 0.150 ± 0.095 & 0.226 ± 0.107 & 0.367 ± 0.105 & \textbf{0.384 ± 0.105} & 0.360 ± 0.102\\
-			\hline
-			5+/10- & ROC-AUC & 0.602 ± 0.059 & 0.610 ± 0.062 & 0.828 ± 0.069 & \textbf{0.824 ± 0.033} & 0.823 ± 0.038 & 0.822 ± 0.023 \\ & PR-AUC & 0.148 ± 0.090 & 0.152 ± 0.094 & 0.190 ± 0.094 & 0.369 ± 0.110 & \textbf{0.388 ± 0.111} & 0.355 ± 0.104\\
-			\hline
-			1+/10- & ROC-AUC & 0.563 ± 0.068 & 0.558 ± 0.076 & 0.836 ± 0.138 & 0.822 ± 0.025 & \textbf{0.826 ± 0.032} & 0.814 ± 0.028 \\ & PR-AUC & 0.128 ± 0.084 & 0.126 ± 0.075 & 0.099 ± 0.093 & 0.301 ± 0.103 & \textbf{0.384 ± 0.096} & 0.325 ± 0.103\\
-			\hline
-			1+/5- & ROC-AUC & 0.534 ± 0.066 & 0.559 ± 0.090 & 0.807 ± 0.159 & \textbf{0.820 ± 0.033} & \textbf{0.820 ± 0.033} & 0.819 ± 0.023 \\ & PR-AUC & 0.112 ± 0.059 & 0.128 ± 0.080 & 0.106 ± 0.086 & 0.339 ± 0.115 & \textbf{0.362 ± 0.106} & 0.318 ± 0.108\\
-			\hline
-			1+/1- & ROC-AUC & 0.550 ± 0.061 & 0.548 ± 0.102 & 0.818 ± 0.075 & 0.819 ± 0.036 & \textbf{0.820 ± 0.030} & 0.813 ± 0.029 \\ & PR-AUC & 0.118 ± 0.068 & 0.123 ± 0.082 & 0.198 ± 0.102 & 0.352 ± 0.121 & \textbf{0.373 ± 0.102} & 0.342 ± 0.093\\
-			\hline
-		\end{tabular}
-	}
-	\label{table:Tox21-mean}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for the Tox21 Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The reproduced results use a reproduction from the MatchingNet model in \citet{altae2017low}. The actual values are tabulated in the supporting information document in tables S1, S2, and S3.}
+    \centering
+    % \ra{1.3}
+    % {\renewcommand{\arraystretch}{1}}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{Tox21} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & 0.617 ± 0.060 & 0.620 ± 0.065 & 0.825 ± 0.043 & 0.824 ± 0.022 & \textbf{0.826 ± 0.034} & 0.814 ± 0.030 \\ & PR-AUC & 0.158 ± 0.102 & 0.150 ± 0.095 & 0.226 ± 0.107 & 0.367 ± 0.105 & \textbf{0.384 ± 0.105} & 0.360 ± 0.102\\
+            \hline
+            5+/10- & ROC-AUC & 0.602 ± 0.059 & 0.610 ± 0.062 & 0.828 ± 0.069 & \textbf{0.824 ± 0.033} & 0.823 ± 0.038 & 0.822 ± 0.023 \\ & PR-AUC & 0.148 ± 0.090 & 0.152 ± 0.094 & 0.190 ± 0.094 & 0.369 ± 0.110 & \textbf{0.388 ± 0.111} & 0.355 ± 0.104\\
+            \hline
+            1+/10- & ROC-AUC & 0.563 ± 0.068 & 0.558 ± 0.076 & 0.836 ± 0.138 & 0.822 ± 0.025 & \textbf{0.826 ± 0.032} & 0.814 ± 0.028 \\ & PR-AUC & 0.128 ± 0.084 & 0.126 ± 0.075 & 0.099 ± 0.093 & 0.301 ± 0.103 & \textbf{0.384 ± 0.096} & 0.325 ± 0.103\\
+            \hline
+            1+/5- & ROC-AUC & 0.534 ± 0.066 & 0.559 ± 0.090 & 0.807 ± 0.159 & \textbf{0.820 ± 0.033} & \textbf{0.820 ± 0.033} & 0.819 ± 0.023 \\ & PR-AUC & 0.112 ± 0.059 & 0.128 ± 0.080 & 0.106 ± 0.086 & 0.339 ± 0.115 & \textbf{0.362 ± 0.106} & 0.318 ± 0.108\\
+            \hline
+            1+/1- & ROC-AUC & 0.550 ± 0.061 & 0.548 ± 0.102 & 0.818 ± 0.075 & 0.819 ± 0.036 & \textbf{0.820 ± 0.030} & 0.813 ± 0.029 \\ & PR-AUC & 0.118 ± 0.068 & 0.123 ± 0.082 & 0.198 ± 0.102 & 0.352 ± 0.121 & \textbf{0.373 ± 0.102} & 0.342 ± 0.093\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:Tox21-mean}
 \end{table}
 
 \subsection{MUV}
 
-Each active in the MUV dataset is structurally distinct from the other, making each data sample maximally informative. Therefore, structural similarities cannot be exploited on unseen active molecules. The baseline benchmark tests consistently outperformed few-shot learning techniques. \citet{altae2017low} report that the results obtained through the GCNs baseline also struggle in performance, however, from our tests and statistical analysis we find that this is not the case for all MUV targets. For most targets, there is no significant difference between the scores obtained through the RFs and GCNs baselines. RNs obtain the best ROC-AUC scores in one instance on the MUV-832 target when trained with a 1+/10- support set, obtaining a mean ROC-AUC score of $0.683 \pm 0.010$. However, this result is not consistent and the performance is only observed in this single instance. Other than this single instance, our results are consistent with the conclusion from the state-of-the-art that baseline machine learning outperforms few-shot machine learning techniques on the MUV dataset. The results for the MUV dataset are shown in Table~\ref{table:muv-mean}.
+Each active in the MUV dataset is structurally distinct from the other, making each data sample maximally informative. Therefore, structural similarities cannot be exploited on unseen active molecules. Our results show that the few-shot learning techniques explored in this study are better suited for lead optimisation (such as toxicity information) rather than hit identification, for which MUV is mostly designed. The baseline benchmark tests consistently outperformed few-shot learning techniques. \citet{altae2017low} report that the results obtained through the GCNs baseline also struggle in performance. However, our tests and statistical analysis show that this is not the case for all MUV targets. For most targets, there is no significant difference between the scores obtained through the RFs and GCNs baselines. RNs obtain the best ROC-AUC scores in one instance on the MUV-832 target when trained with a 1+/10- support set, obtaining a mean ROC-AUC score of $0.683 \pm 0.010$. However, this result is inconsistent, and the performance is only observed in this single instance. Other than this single instance, our results are consistent with the conclusion from the state-of-the-art that baseline machine learning outperforms few-shot machine learning techniques on the MUV dataset. The results for the MUV dataset are shown in Table~\ref{table:muv-mean}. 
 
 \begin{table}
-	\caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for MUV Test Targets over 20 rounds of testing. Bold text illustrates the best obtained value. The first column shows the composition of the support set. The reproduced results from the model used in \citet{altae2017low} is the MatchingNet. The actual values are tabulated in the supporting information document in tables S4, S5, S6, S7, and S8.}
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{@{}cccccccc@{}}
-			\hline
-			\textbf{MUV} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
-			\hline
-			10+/10- & ROC-AUC & \textbf{0.728 ± 0.145} & 0.713 ± 0.133 & 0.562 ± 0.046 & 0.628 ± 0.096 & 0.599 ± 0.085 & 0.490 ± 0.071 \\ & PR-AUC & \textbf{0.066 ± 0.073} & 0.009 ± 0.012 & 0.001 ± 0.000 & 0.007 ± 0.010 & 0.003 ± 0.002 & 0.002 ± 0.001\\
-			\hline
-			5+/10- & ROC-AUC & \textbf{0.696 ± 0.132} & 0.666 ± 0.115 & 0.550 ± 0.054 & 0.516 ± 0.085 & 0.576 ± 0.055 & 0.502 ± 0.072 \\ & PR-AUC & \textbf{0.071 ± 0.076} & 0.015 ± 0.022 & 0.001 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002\\
-			\hline
-			1+/10- & ROC-AUC & \textbf{0.599 ± 0.104} & 0.585 ± 0.116 & 0.648 ± 0.158 & 0.492 ± 0.082 & 0.540 ± 0.053 & 0.547 ± 0.090 \\ & PR-AUC & \textbf{0.021 ± 0.032} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002\\
-			\hline
-			1+/5- & ROC-AUC & \textbf{0.587 ± 0.106} & 0.585 ± 0.126 & 0.613 ± 0.179 & 0.461 ± 0.046 & 0.494 ± 0.050 & 0.500 ± 0.000 \\ & PR-AUC & \textbf{0.027 ± 0.040} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.002 ± 0.001 & 0.002 ± 0.000\\
-			\hline
-			1+/1- & ROC-AUC & 0.573 ± 0.103 & \textbf{0.577 ± 0.147} & 0.620 ± 0.138 & 0.507 ± 0.037 & 0.505 ± 0.030 & 0.484 ± 0.060 \\ & PR-AUC & \textbf{0.022 ± 0.036} & 0.006 ± 0.007 & 0.004 ± 0.011 & 0.002 ± 0.000 & 0.003 ± 0.001 & 0.002 ± 0.001\\
-			\hline
-		\end{tabular}
-	}
-	\label{table:muv-mean}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for MUV Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The reproduced results use a reproduction from the MatchingNet model in \citet{altae2017low}. The actual values are tabulated in the supporting information document in tables S4, S5, S6, S7, and S8.}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{MUV} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & \textbf{0.728 ± 0.145} & 0.713 ± 0.133 & 0.562 ± 0.046 & 0.628 ± 0.096 & 0.599 ± 0.085 & 0.490 ± 0.071 \\ & PR-AUC & \textbf{0.066 ± 0.073} & 0.009 ± 0.012 & 0.001 ± 0.000 & 0.007 ± 0.010 & 0.003 ± 0.002 & 0.002 ± 0.001\\
+            \hline
+            5+/10- & ROC-AUC & \textbf{0.696 ± 0.132} & 0.666 ± 0.115 & 0.550 ± 0.054 & 0.516 ± 0.085 & 0.576 ± 0.055 & 0.502 ± 0.072 \\ & PR-AUC & \textbf{0.071 ± 0.076} & 0.015 ± 0.022 & 0.001 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002\\
+            \hline
+            1+/10- & ROC-AUC & \textbf{0.599 ± 0.104} & 0.585 ± 0.116 & 0.648 ± 0.158 & 0.492 ± 0.082 & 0.540 ± 0.053 & 0.547 ± 0.090 \\ & PR-AUC & \textbf{0.021 ± 0.032} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002\\
+            \hline
+            1+/5- & ROC-AUC & \textbf{0.587 ± 0.106} & 0.585 ± 0.126 & 0.613 ± 0.179 & 0.461 ± 0.046 & 0.494 ± 0.050 & 0.500 ± 0.000 \\ & PR-AUC & \textbf{0.027 ± 0.040} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.002 ± 0.001 & 0.002 ± 0.000\\
+            \hline
+            1+/1- & ROC-AUC & 0.573 ± 0.103 & \textbf{0.577 ± 0.147} & 0.620 ± 0.138 & 0.507 ± 0.037 & 0.505 ± 0.030 & 0.484 ± 0.060 \\ & PR-AUC & \textbf{0.022 ± 0.036} & 0.006 ± 0.007 & 0.004 ± 0.011 & 0.002 ± 0.000 & 0.003 ± 0.001 & 0.002 ± 0.001\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:muv-mean}
 \end{table}
 
 \subsection{GPCR subset of the DUD-E}
 
-For the ADRB2 target, the few-shot learning models achieve stellar performance based on ROC-AUC and PR-AUC scores. The results are close to a perfect classifier, which raises concerns about the underlying data. Our hypothesis is that the underlying data contains an inherent bias, which is confirmed by further research on the matter. Some studies indicate that the DUD-E dataset has limited chemical space and bias from the decoy compound selection process \cite{smusz2013influence, wallach2018most}. \citet{chen2019hidden} investigate this further to establish the effect these characteristics have on CNN models. The authors conclude that there is analogue bias within the set of actives within the targets (intra-target analogue bias), and also between the actives of different targets (inter-target analogue bias). They also provide evidence that there is also bias in decoy selection through the selection criteria for decoys. Results obtained from the DUD-E dataset are not conclusive. On the other hand, for the decoys available for the CXCR4 target, the RF model excels and outperforms the few-shot learning models. Seeing that the GCN benchmark model also performed significantly better than few-shot learning models, this implies that there is a clear benefit of training on the same data from the target, as opposed to the few-shot learning models which are trained on other targets instead. Having such mixed results on two different targets within the same subset of the dataset does not give us a conclusive picture of whether few-shot learning is effective on this dataset. The results for the GPCR subset of DUD-E are shown in Table~\ref{table:dude-mean}.
+The few-shot learning model trained on the ADRB2 target achieves stellar performance based on ROC-AUC and PR-AUC scores. The results are close to a perfect classifier, which raises concerns about the underlying data. We hypothesise that the underlying data contains an inherent bias, which is confirmed by further research on the matter. Some studies indicate that the DUD-E dataset has limited chemical space and bias from the decoy compound selection process \cite{smusz2013influence, wallach2018most}. \citet{chen2019hidden} investigate this further to establish the effect these characteristics have on CNN models. The authors conclude that there is analogue bias within the set of actives within the targets (intra-target analogue bias) and between the actives of different targets (inter-target analogue bias). They also provide evidence of bias in decoy selection through the selection criteria for decoys. Results obtained from the DUD-E dataset are not conclusive.
+
+On the other hand, for the decoys available for the CXCR4 target, the RF model excels and outperforms the few-shot learning models. The GCN benchmark model also performed significantly better than few-shot learning models, which implies a clear benefit of training on the same data from the target, as opposed to the few-shot learning models, which are trained on other targets instead. Having such mixed results on two different targets within the same subset of the dataset does not give us a conclusive picture of whether few-shot learning is effective on this dataset. The results for the GPCR subset of DUD-E are presented in Table~\ref{table:dude-mean}.
 
 \begin{table}
-	\caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for DUD-E GPCR Test Targets over 20 rounds of testing. Bold text illustrates the best obtained value. The first column shows the composition of the support set. The actual values are tabulated in the supporting information document in tables S9, and S10.}
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{@{}cccccccc@{}}
-			\hline
-			\textbf{DUDE-GPCR} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
-			\hline
-			10+/10- & ROC-AUC & \textbf{0.982 ± 0.018} & 0.940 ± 0.039 & 0.784 ± 0.215 & 0.900 ± 0.102 & 0.816 ± 0.187 & 0.928 ± 0.008 \\ & PR-AUC & \textbf{0.872 ± 0.102} & 0.504 ± 0.225 & 0.489 ± 0.475 & 0.535 ± 0.451 & 0.552 ± 0.445 & 0.562 ± 0.020\\
-			\hline
-			5+/10- & ROC-AUC & \textbf{0.958 ± 0.023} & 0.901 ± 0.058 & 0.761 ± 0.238 & 0.845 ± 0.153 & 0.843 ± 0.181 & 0.850 ± 0.149 \\ & PR-AUC & \textbf{0.762 ± 0.119} & 0.428 ± 0.247 & 0.495 ± 0.465 & 0.506 ± 0.477 & 0.559 ± 0.439 & 0.523 ± 0.447\\
-			\hline
-			1+/10- & ROC-AUC & 0.854 ± 0.071 & 0.788 ± 0.098 & 0.759 ± 0.247 & \textbf{0.881 ± 0.119} & 0.841 ± 0.159 & 0.866 ± 0.132 \\ & PR-AUC & 0.360 ± 0.136 & 0.230 ± 0.176 & 0.474 ± 0.445 & 0.521 ± 0.455 & 0.504 ± 0.463 & \textbf{0.541 ± 0.433}\\
-			\hline
-			1+/5- & ROC-AUC & \textbf{0.858 ± 0.084} & 0.763 ± 0.087 & 0.759 ± 0.246 & 0.851 ± 0.155 & 0.793 ± 0.211 & 0.848 ± 0.149 \\ & PR-AUC & 0.378 ± 0.123 & 0.221 ± 0.153 & 0.482 ± 0.444 & 0.516 ± 0.438 & \textbf{0.519 ± 0.474} & 0.490 ± 0.427\\
-			\hline
-			1+/1- & ROC-AUC & 0.804 ± 0.108 & 0.710 ± 0.121 & 0.771 ± 0.228 & 0.795 ± 0.203 & \textbf{0.865 ± 0.133} & 0.747 ± 0.251 \\ & PR-AUC & 0.301 ± 0.168 & 0.116 ± 0.121 & 0.500 ± 0.417 & 0.511 ± 0.470 & \textbf{0.543 ± 0.439} & 0.500 ± 0.465\\
-			\hline
-		\end{tabular}
-	}
-	\label{table:dude-mean}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for DUD-E GPCR Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The actual values are tabulated in the supporting information document in tables S9, and S10.}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{DUDE-GPCR} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & \textbf{0.982 ± 0.018} & 0.940 ± 0.039 & 0.784 ± 0.215 & 0.900 ± 0.102 & 0.816 ± 0.187 & 0.928 ± 0.008 \\ & PR-AUC & \textbf{0.872 ± 0.102} & 0.504 ± 0.225 & 0.489 ± 0.475 & 0.535 ± 0.451 & 0.552 ± 0.445 & 0.562 ± 0.020\\
+            \hline
+            5+/10- & ROC-AUC & \textbf{0.958 ± 0.023} & 0.901 ± 0.058 & 0.761 ± 0.238 & 0.845 ± 0.153 & 0.843 ± 0.181 & 0.850 ± 0.149 \\ & PR-AUC & \textbf{0.762 ± 0.119} & 0.428 ± 0.247 & 0.495 ± 0.465 & 0.506 ± 0.477 & 0.559 ± 0.439 & 0.523 ± 0.447\\
+            \hline
+            1+/10- & ROC-AUC & 0.854 ± 0.071 & 0.788 ± 0.098 & 0.759 ± 0.247 & \textbf{0.881 ± 0.119} & 0.841 ± 0.159 & 0.866 ± 0.132 \\ & PR-AUC & 0.360 ± 0.136 & 0.230 ± 0.176 & 0.474 ± 0.445 & 0.521 ± 0.455 & 0.504 ± 0.463 & \textbf{0.541 ± 0.433}\\
+            \hline
+            1+/5- & ROC-AUC & \textbf{0.858 ± 0.084} & 0.763 ± 0.087 & 0.759 ± 0.246 & 0.851 ± 0.155 & 0.793 ± 0.211 & 0.848 ± 0.149 \\ & PR-AUC & 0.378 ± 0.123 & 0.221 ± 0.153 & 0.482 ± 0.444 & 0.516 ± 0.438 & \textbf{0.519 ± 0.474} & 0.490 ± 0.427\\
+            \hline
+            1+/1- & ROC-AUC & 0.804 ± 0.108 & 0.710 ± 0.121 & 0.771 ± 0.228 & 0.795 ± 0.203 & \textbf{0.865 ± 0.133} & 0.747 ± 0.251 \\ & PR-AUC & 0.301 ± 0.168 & 0.116 ± 0.121 & 0.500 ± 0.417 & 0.511 ± 0.470 & \textbf{0.543 ± 0.439} & 0.500 ± 0.465\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:dude-mean}
 \end{table}
 
 \subsection{Comparison with the State of the Art}
 
-We tabulate the ROC-AUC results obtained by \citet{altae2017low} in Table~\ref{table:Tox21-sota-ours} and compare them to the best results obtained from our implementations. The best network is selected using statistical analysis, comparing the results from 20 test rounds for each experiment across all the techniques employed. Instances in which we have more than one best network tabulated, such as the SR-MMP 10+/10- example in Table~\ref{table:Tox21-sota-ours}, indicate that we do not find any statistically significant difference between the results obtained from that specific technique. Prototypical Network has the highest frequency of being identified as the best network on Tox21 data based on ROC-AUC scores. We remind the reader that while we also report the PR-AUC score from our experiments, this metric is not available in the study by \citet{altae2017low}, hence why the results reported in Table~\ref{table:Tox21-sota-ours} contain only ROC-AUC results. We highlight that for the PR-AUC metrics, Prototypical Networks consistently performed well, obtaining the best PR-AUC scores throughout all Tox21 targets. Using statistical analysis, Matching Networks and Relation Networks also match the performance in some cases. The PR-AUC is used to determine how well the model predicts active compounds, as it is the ratio of true positives divided by the sum of true positives and false positives. Therefore, we strongly believe that in machine learning experiments for virtual screening, this metric should be used in addition to ROC-AUC scores. We attribute any improvement in ROC-AUC for Matching Networks in our implementation over the state of the art to the featurisation of molecule and variability which might arise through machine learning. However, we reiterate that all results reported in this study are compared homogeneously using the same machine learning architectures. 
+We tabulate the ROC-AUC results obtained by \citet{altae2017low} in Table~\ref{table:Tox21-sota-ours} and compare them to the best results obtained from our implementations. The best network is selected using statistical analysis, comparing the results from 20 test rounds for each experiment across all the techniques employed. Instances in which we have more than one best network tabulated, such as the SR-MMP 10+/10- example in Table~\ref{table:Tox21-sota-ours}, indicate that we do not find any statistically significant difference between the results obtained from that specific technique. The PN architecture has the highest frequency of being identified as the best network on Tox21 data based on ROC-AUC scores. We remind the reader that while we also report the PR-AUC score from our experiments, this metric is not available in the study by \citet{altae2017low}, hence why the results reported in Table~\ref{table:Tox21-sota-ours} contain only ROC-AUC results. We highlight that Prototypical Networks consistently performed well based on PR-AUC metrics, obtaining the best scores throughout all Tox21 targets. Using statistical analysis, Matching Networks and Relation Networks also match the performance in some cases. The PR-AUC is used to determine how well the model predicts active compounds, as it is the ratio of true positives divided by the sum of true positives and false positives. Therefore, we firmly believe that in machine learning experiments for virtual screening, this metric should be used in addition to ROC-AUC scores. We attribute any improvement in ROC-AUC for Matching Networks in our implementation over the state-of-the-art to the featurisation of molecules and variability which might arise through machine learning. However, we reiterate that all results reported in this study are compared homogeneously using our implementations of all machine learning architectures.
 
 \begin{table}[ht]
-	\centering
-	\begin{tabular}{@{}cccccc@{}}
-	\hline
-	\textbf{Target} & \textbf{Support Set} & \textbf{SOTA} & \textbf{SOTA ROC-AUC} & \textbf{Obtained ROC-AUC} & \textbf{Best Networks} \\
-	\hline	
-	SR-HSE & 10+/10- & MN & 0.772 ± 0.002 & \textbf{0.793 ± 0.002} & MN \\
-	SR-HSE & 5+/10- & MN & 0.771 ± 0.002 & \textbf{0.791 ± 0.003} & RN \\
-	SR-HSE & 1+/10- & MN & 0.671 ± 0.007 & \textbf{0.788 ± 0.001} & MN \\
-	SR-HSE & 1+/5- & MN & 0.729 ± 0.003 & \textbf{0.789 ± 0.001} & RN \\
-	SR-HSE & 1+/1- & MN & 0.767 ± 0.001 & \textbf{0.779 ± 0.007} & PN \\
-	SR-MMP & 10+/10- & MN & 0.838 ± 0.001 & \textbf{0.845 ± 0.015} & MN/PN/RN \\
-	SR-MMP & 5+/10- & MN & 0.847 ± 0.001 & \textbf{0.853 ± 0.007} & MN/PN \\
-	SR-MMP & 1+/10- & SN & 0.809 ± 0.020 & \textbf{0.849 ± 0.005} & PN \\
-	SR-MMP & 1+/5- & MN & 0.799 ± 0.002 & \textbf{0.853 ± 0.001} & MN \\
-	SR-MMP & 1+/1- & MN & 0.835 ± 0.001 & \textbf{0.851 ± 0.008} & MN \\
-	SR-p53 & 10+/10- & MN & 0.823 ± 0.002 & \textbf{0.850 ± 0.004} & PN \\
-	SR-p53 & 5+/10- & MN & 0.830 ± 0.001 & \textbf{0.852 ± 0.009} & PN \\
-	SR-p53 & 1+/10- & SN & 0.726 ± 0.173 & \textbf{0.848 ± 0.005} & PN \\
-	SR-p53 & 1+/5- & MN & 0.795 ± 0.005 & \textbf{0.840 ± 0.005} & PN \\
-	SR-p53 & 1+/1- & MN & 0.827 ± 0.001 & \textbf{0.838 ± 0.004} & MN \\
-	\hline	
-	\end{tabular}
-	\caption[Comparing our best ROC-AUC scores with the SOTA results on Tox21.]{Comparison of our best ROC-AUC scores against the state of the art (SOTA) results from \citet{altae2017low} on the Tox21 dataset. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text.}
-	\label{table:Tox21-sota-ours}
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+    \hline
+    \textbf{Target} & \textbf{Support Set} & \textbf{SOTA} & \textbf{SOTA ROC-AUC} & \textbf{Obtained ROC-AUC} & \textbf{Best Networks} \\
+    \hline  
+    SR-HSE & 10+/10- & MN & 0.772 ± 0.002 & \textbf{0.793 ± 0.002} & MN \\
+    SR-HSE & 5+/10- & MN & 0.771 ± 0.002 & \textbf{0.791 ± 0.003} & RN \\
+    SR-HSE & 1+/10- & MN & 0.671 ± 0.007 & \textbf{0.788 ± 0.001} & MN \\
+    SR-HSE & 1+/5- & MN & 0.729 ± 0.003 & \textbf{0.789 ± 0.001} & RN \\
+    SR-HSE & 1+/1- & MN & 0.767 ± 0.001 & \textbf{0.779 ± 0.007} & PN \\
+    SR-MMP & 10+/10- & MN & 0.838 ± 0.001 & \textbf{0.845 ± 0.015} & MN/PN/RN \\
+    SR-MMP & 5+/10- & MN & 0.847 ± 0.001 & \textbf{0.853 ± 0.007} & MN/PN \\
+    SR-MMP & 1+/10- & SN & 0.809 ± 0.020 & \textbf{0.849 ± 0.005} & PN \\
+    SR-MMP & 1+/5- & MN & 0.799 ± 0.002 & \textbf{0.853 ± 0.001} & MN \\
+    SR-MMP & 1+/1- & MN & 0.835 ± 0.001 & \textbf{0.851 ± 0.008} & MN \\
+    SR-p53 & 10+/10- & MN & 0.823 ± 0.002 & \textbf{0.850 ± 0.004} & PN \\
+    SR-p53 & 5+/10- & MN & 0.830 ± 0.001 & \textbf{0.852 ± 0.009} & PN \\
+    SR-p53 & 1+/10- & SN & 0.726 ± 0.173 & \textbf{0.848 ± 0.005} & PN \\
+    SR-p53 & 1+/5- & MN & 0.795 ± 0.005 & \textbf{0.840 ± 0.005} & PN \\
+    SR-p53 & 1+/1- & MN & 0.827 ± 0.001 & \textbf{0.838 ± 0.004} & MN \\
+    \hline  
+    \end{tabular}
+    \caption[Comparing our best ROC-AUC scores with the SOTA results on Tox21.]{Comparison of our best ROC-AUC scores against the state-of-the-art (SOTA) results from \citet{altae2017low} on the Tox21 dataset. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text.}
+    \label{table:Tox21-sota-ours}
 \end{table}
 
 \subsection{ECFP vs Graph-Learned Embeddings}
 
-We also ran an experiment to test whether the molecular representation affects the performance in few-shot learning. These experiments are run on the Tox21 dataset, using Prototypical Networks, as these performed consistently well in our other experiments. ECFPs are based on the topology and a number of atom descriptors, in which the molecule is fragmented into local neighbourhoods and hashed into a vector. On the other hand, graph-learned embeddings are guided by gradient descent during training to produce a more relevant latent space embedding for the molecule. A neural network was used to learn a differentiable molecular embedding, from the ECFP, of the same size (a vector of size 128) as the one produced by the GCN. The results obtained using a learned embedding from GCNs consistently outperform the ones in which an ECFP was used. The values obtained from these experiments are tabulated in the supporting information document in Table S11.
+We also tested whether the molecular representation affects the performance in few-shot learning on Tox21 data. We only employ the Prototypical Networks architecture for this particular experiment, as these performed consistently well in our other experiments. ECFPs are based on the topology and atom descriptors, whereby the molecule is fragmented into local neighbourhoods and hashed into a vector. On the other hand, graph-learned embeddings are guided by gradient descent during training to produce a more relevant embedding in latent space for the molecule. A neural network was used to learn a differentiable molecular embedding, from the ECFP, of the same size (a vector of size 128) as the one produced by the GCN. The results obtained using a learned embedding from GCNs consistently outperform the ones in which an ECFP was used. The values obtained from these experiments are tabulated in the supporting information document in Table S11.
 
 \subsection{Training Times}
 
-From the results on the Tox21 dataset, MNs, PNs, and RNs obtain good predictive performance, however, it is evident from the presented result that the two latter networks are much faster to train on the same hardware. From our experiments on the three Tox21 targets, MNs and PNs were the most consistent in results. As the decrease in training times is substantial, by over 150\% between MNs and both PNs and RNs, we believe that this puts the latter two networks at an advantage. Faster training times allow faster turnaround of results from datasets, while requiring less intense use of computer hardware. This increase in efficiency also allows scientists to perform a more rigorous hyperparameter search on various datasets in a shorter time.
+From the results on the Tox21 dataset, MNs, PNs, and RNs obtain good predictive performance; however, it is evident from the presented result that the two latter networks are much faster to train on the same hardware. From our experiments on the three Tox21 targets, MNs and PNs obtained the most consistent results. As the decrease in training times is substantial, by over 150\% between MNs and both PNs and RNs, we believe this puts the latter two networks at an advantage. Faster training times allow a faster turnaround of results while requiring less intense use of computer hardware. This increase in efficiency also allows scientists to perform a more rigorous hyperparameter search on various datasets in a shorter time.
