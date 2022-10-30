@@ -33,14 +33,16 @@ Graph Convolutional Networks (GCNs) may be used to learn molecular representatio
 
 If the graph object is our input signal, we can apply a set of operators to approximate the function we are attempting to learn. \citet{bronstein2021geometric} propose four key building blocks for deep learning on graphs, which include linear set equivariant layers, non-linear functions, local pooling layers, and set invariant layers. For graphs, the nodes $v$ are found on a domain $\Omega$ such that $v \in \Omega$. The nodes in $\Omega$ are stored in a feature space $C$, such that $C = \mathbb{R}^k$. Using a set of feature functions $X(\Omega, C)$, we can transform the feature space of the nodes in our domain. 
 
-In the equivariant layer $B$, we can take the nodes in our domain and apply a function that transforms the features of the nodes such that $X(\Omega, C) \rightarrow X(\Omega', C')$. Equivariance allows for a function $g$ to be applied before or after this layer, such that $B(g.x) = g.B(x)$. The non-linear activation functions can be applied element-wise on the features of the nodes in a graph, such that $(\sigma(x))(v) = \sigma(x(v))$. Local pooling layers can be used to apply coarsening to the graph such that $X(\Omega, C) \rightarrow X(\Omega', C)$, in which we can reduce the number of nodes in our domain such that $\Omega' \subseteq \Omega$. Finally, we have the invariant layer $Z$, which can also be referred to as a global pooling layer, in which $X(\Omega, C) \rightarrow y$, which satisfies the invariant condition such that $Z(g.x) = Z(x)$ \citep{bronstein2021geometric}. Figure \ref{fig:neuralgraphfingerprint} illustrates an example of a GCN to learn a molecular embedding.
+In the equivariant layer $B$, we can take the nodes in our domain and apply a function that transforms the features of the nodes such that $X(\Omega, C) \rightarrow X(\Omega', C')$. Equivariance allows for a function $g$ to be applied before or after this layer, such that $B(g.x) = g.B(x)$. The non-linear activation functions can be applied element-wise on the features of the nodes in a graph, such that $(\sigma(x))(v) = \sigma(x(v))$. Local pooling layers can be used to apply coarsening to the graph such that $X(\Omega, C) \rightarrow X(\Omega', C)$, in which we can reduce the number of nodes in our domain such that $\Omega' \subseteq \Omega$. Finally, we have the invariant layer $Z$, which can also be referred to as a global pooling layer, in which $X(\Omega, C) \rightarrow y$, which satisfies the invariant condition such that $Z(g.x) = Z(x)$ \citep{bronstein2021geometric}. 
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\linewidth]{img/graph_mol_embedding.png}
-    \caption[Learned Embedding through a GCN]{A typical pipeline for representing molecules using a learned embedding function, which can be processed further using feedforward neural networks as shown. Reproduced from \citet{jiang2021could}.}
-    \label{fig:neuralgraphfingerprint}
-  \end{figure}
+% Figure \ref{fig:neuralgraphfingerprint} illustrates an example of a GCN to learn a molecular embedding.
+
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{img/graph_mol_embedding.png}
+%     \caption[Learned Embedding through a GCN]{A typical pipeline for representing molecules using a learned embedding function, which can be processed further using feedforward neural networks as shown. Reproduced from \citet{jiang2021could}.}
+%     \label{fig:neuralgraphfingerprint}
+%   \end{figure}
 
 \subsection{Metric-based Few-Shot Learning}
 
@@ -53,7 +55,7 @@ The success of a few-shot learning model for metric-based meta-learning is depen
 
 \subsubsection{Siamese Networks}
 
-Siamese networks \citep{koch2015siamese} are composed of two identical networks with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The distance between outputs from each component in the pair of networks is calculated to learn their relationship. The following is the process, repeated for all training tasks, employed for learning a classifier using Siamese Networks.
+Siamese networks \citep{koch2015siamese} are composed of two identical networks with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The distance between outputs from each component in the pair of networks is calculated to learn their relationship. The process for learning a classifier using Siamese Networks is visualised in Figure \ref{fig:siamesenetarchi} and is described as follows;
 
 \begin{figure}[h]
     \centering
@@ -76,8 +78,8 @@ The Matching Networks architecture builds on Siamese Networks. However, instead 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.7\linewidth]{img/matching_networks.png}
-    \caption[Matching Networks Architecture]{Matching Networks Architecture. Reproduced from \citet{vinyals2016matching}.}
+    \includegraphics[width=0.7\linewidth]{img/matching_networks_adapt.png}
+    \caption[Matching Networks Architecture]{Matching Networks Architecture. Adapted from \citet{vinyals2016matching}.}
     \label{fig:matchingnets}
 \end{figure}
 
@@ -89,19 +91,19 @@ Prototypical Networks \citep{snell2017prototypical} have similarities to Matchin
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.7\linewidth]{img/protonets.png}
-    \caption{Few-shot learning in Prototypical Networks, where prototypes \textbf{$c_k$} are taken as the mean of embedded support examples for each class. Reproduced from \citet{snell2017prototypical}.}
+    \includegraphics[width=0.7\linewidth]{img/ProtoNetsAdapt.png}
+    \caption{Few-shot learning in Prototypical Networks, where prototypes \textbf{$c_k$} are taken as the mean of embedded support examples for each class. Adapted from \citet{snell2017prototypical}.}
     \label{fig:protonets}
 \end{figure}
 
 \subsubsection{Relation Networks}
 
-\citet{sung2018learning} present the Relation Network, a framework for few-shot learning, which could also be extended to zero-shot learning. The Relation Network learns a non-linear distance metric to compare support and query examples. Unlike previously mentioned networks, this network uses a feedforward neural network to learn a distance function in feature space. After embedding the support and query examples using an embedding function, each query example is concatenated with each feature map from the support set. The relationship between the queries and the different classes within the support set is captured by passing the feature map concatenations through a feed-forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. The output class can be inferred from this relation score vector. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The Mean Squared Error (MSE) is used as the loss function, as proposed in the original paper. 
+\citet{sung2018learning} present the Relation Network, a framework for few-shot learning but one which could also be extended to zero-shot learning. The Relation Network learns a non-linear distance metric to compare support and query examples. Unlike previously mentioned networks, this network uses a feedforward neural network to learn a distance function in feature space. After embedding the support and query examples using an embedding function, each query example is concatenated with each feature map from the support set. The relationship between the queries and the different classes within the support set is captured by passing the feature map concatenations through a feed-forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. The output class can be inferred from this relation score vector. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The Mean Squared Error (MSE) is used as the loss function, as proposed in the original paper. Figure \ref{fig:relationnets} illustrates the Relation Network architecture.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\linewidth]{img/relation-nets.png}
-    \caption[Relation Networks]{Few-shot learning scenario in Relation Networks for a 5-way 1-shot learning task with one query as an example. Reproduced from \citet{sung2018learning}.}
+    \includegraphics[width=0.9\linewidth]{img/RelationNetAdapt.png}
+    \caption[Relation Networks]{Few-shot learning scenario in Relation Networks for a 4-way 1-shot learning task with one query as an example. Adapted from \citet{sung2018learning}.}
     \label{fig:relationnets}
 \end{figure}
 
