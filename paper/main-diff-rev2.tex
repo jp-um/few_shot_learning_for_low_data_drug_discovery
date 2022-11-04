@@ -1,0 +1,1100 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL ./scratch/main.tex                                                   Wed Sep 28 16:45:32 2022
+%DIF ADD ./git/few_shot_learning_for_low_data_drug_discovery/paper/main.tex   Wed Sep 28 16:45:32 2022
+%% This is a (brief) model paper using the achemso class
+%% The document class accepts keyval options, which should include
+%% the target journal and optionally the manuscript type.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[journal=jcisd8,manuscript=article]{achemso} % jcisd8 for jcim
+% \documentclass[journal=acscii,manuscript=article,layout=twocolumn]{achemso}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Place any additional packages needed here.  Only include packages
+%% which are essential, to avoid problems later.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+
+\usepackage{chemformula} % Formula subscripts using \ch{}
+\usepackage[T1]{fontenc} % Use modern font encodings
+
+\setcounter{secnumdepth}{4}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% If issues arise when submitting your manuscript, you may want to
+%% un-comment the next line.  This provides information on the
+%% version of every file you have used.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%\listfiles
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Place any additional macros here.  Please use \newcommand* where
+%% possible, and avoid layout-changing macros (which are not used
+%% when typesetting).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*\mycommand[1]{\texttt{\emph{#1}}}
+
+\newenvironment{datasoftware}{%
+\section*{Data and Software Availability}%
+}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Meta-data block
+%% ---------------
+%% Each author should be given as a separate \author command.
+%%
+%% Corresponding authors should have an e-mail given after the author
+%% name as an \email command. Phone and fax numbers can be given
+%% using \phone and \fax, respectively; this information is optional.
+%%
+%% The affiliation of authors is given after the authors; each
+%% \affiliation command applies to all preceding authors not already
+%% assigned an affiliation.
+%%
+%% The affiliation takes an option argument for the short name.  This
+%% will typically be something like "University of Somewhere".
+%%
+%% The \altaffiliation macro should be used for new address, etc.
+%% On the other hand, \alsoaffiliation is used on a per author basis
+%% when authors are associated with multiple institutions.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{Daniel Vella}
+\affiliation{Department of Artificial Intelligence, University of Malta, Msida, MSD 2080, Malta.}
+
+\author{Jean-Paul Ebejer}
+\email{jean.p.ebejer@um.edu.mt} %% JP: the PI address is used, because you address will
+\affiliation{Department of Artificial Intelligence, University of Malta, Msida, MSD 2080, Malta.}
+\altaffiliation{Centre for Molecular Medicine and Biobanking, University of Malta, Msida, MSD 2080, Malta.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The document title should be given as usual. Some journals require
+%% a running title from the author: this should be supplied as an
+%% optional argument to \title.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \title[An \textsf{achemso} demo]
+\title
+  {Few-Shot Learning for Low-Data Drug Discovery}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Some journals require a list of abbreviations or keywords to be
+%% supplied. These should be set up here, and will be printed after
+%% the title and author information, if needed.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\abbreviations{LBVS, Tox21, MUV, DUD-E}
+\keywords{machine learning, few-shot learning, low-data, prototypical networks, relation networks, matching networks}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The manuscript does not need to include \maketitle, which is
+%% executed automatically.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF LISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The "tocentry" environment can be used to create an entry for the
+%% graphical table of contents. It is given here as some journals
+%% require that it is printed as part of the abstract page. It will
+%% be automatically moved as appropriate.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{tocentry}
+
+% Some journals require a graphical entry for the Table of Contents.
+% This should be laid out ``print ready'' so that the sizing of the
+% text is correct.
+
+% Inside the \texttt{tocentry} environment, the font used is Helvetica
+% 8\,pt, as required by \emph{Journal of the American Chemical
+% Society}.
+
+% The surrounding frame is 9\,cm by 3.5\,cm, which is the maximum
+% permitted for  \emph{Journal of the American Chemical Society}
+% graphical table of content entries. The box will not resize if the
+% content is too big: instead it will overflow the edge of the box.
+
+% This box and the associated title will always be printed on a
+% separate page at the end of the document.
+
+% \end{tocentry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The abstract environment will automatically gobble the contents
+%% if an abstract is not used by the target journal.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+	The discovery of new hits through ligand-based virtual screening in drug discovery is essentially a low-data problem, as data acquisition is both difficult and expensive. The requirement for large amounts of training data hinders the application of conventional machine learning techniques to this problem domain. This work explores few-shot machine learning for hit discovery and lead optimisation. We build on the state-of-the-art and introduce two new metric-based meta-learning techniques, Prototypical and Relation Networks, to this problem domain. We also explore using different embeddings, namely extended-connectivity fingerprints (ECFP) and embeddings generated through graph convolutional networks (GCN), as inputs to neural networks for classification. This study shows that learned embeddings through GCNs consistently perform better than extended-connectivity fingerprints for toxicity and LBVS experiments. We conclude that the effectiveness of few-shot learning is highly dependent on the nature of the data. Few-shot learning models struggle to perform consistently on MUV and DUD-E data, in which the active compounds are structurally distinct. However, on Tox21 data, the few-shot models perform well, and we find that Prototypical Networks outperform the state-of-the-art based on the Matching Networks architecture. Additionally, training these networks is substantially faster (up to 190\%) and therefore takes a fraction of the time to train for comparable, or better, results.
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Start the main part of the manuscript here.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+We humans exhibit a remarkable ability to learn new concepts fast and efficiently. This ability is in stark contrast with conventional supervised machine learning, which is data-hungry and requires a plethora of data points to develop an effective model. Meta-learning reframes the traditional machine learning problem, allowing machine learning models to learn new problems by utilising only a few examples. Humans have an innate capability to \textit{learn how to learn}, and bridging this gap between human and machine learning is particularly beneficial in domains where data availability or acquisition is difficult, such as the drug-discovery domain. The drug-discovery process's primary goal is identifying and developing active compounds that exhibit therapeutic effects against biological targets. The drug-discovery process comes with exorbitant costs and resource expenditure, which can exceed one billion dollars and take up to 15 years to complete \cite{hughes2011principles}.
+
+Moreover, data is also expensive and difficult to acquire, as this requires testing of numerous compounds both \textit{in-vitro} and, much later, \textit{in-vivo}. Even upon identification of leads, attrition rates are high as the compound usually fails for other reasons such as poor absorption, distribution, metabolism, excretion, or toxicology (ADMET) characteristics \cite{waring2015analysis}. It is difficult to predict such characteristics of the candidate molecule when only a small amount of related biological data is available. Therefore, the hist discovery, lead identification, and optimisation steps in drug discovery are essentially a low-data problem \cite{altae2017low}. In recent years, the computer vision domain saw successful applications and advancements for low-data machine learning \cite{koch2015siamese, vinyals2016matching, snell2017prototypical, sung2018learning}. Few-shot learning relieves the burden of collecting large-scale labelled data and makes learning rare cases possible \cite{wang2020generalizing}. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/tox21-metalearning.png}
+    \caption{2-way 3-shot few-shot classification. Training a meta-learner on experimental assays and generalising for an unseen assay in the Tox-21 dataset.}
+    \label{fig:tox21metalearning}
+\end{figure}
+
+Building on this notion, we explore few-shot learning to address the low-data problem for hit discovery, lead identification and optimisation. The ability of a machine learning model to learn new concepts fast with just a few training examples is invaluable for this domain, where data on active compounds is scarce. Meta-learning aims to achieve generalising capabilities for previously unseen environments during training time. In few-shot classification, a meta-learning paradigm, we train models using a variety of training tasks and optimise classification performance over a distribution of tasks, including unseen ones. Learning consists of a series of episodes, each consisting of an \textit{N}-way \textit{K}-shot classification task, effectively simulating the conditions at testing time. $N$ refers to the number of classes we include per task, while $K$ refers to the number of molecules we sample for each class to make up the support set \cite{snell2017prototypical}. For this study, few-shot learning refers to training with as little as one example per class, referred to as one-shot learning \cite{koch2015siamese, vinyals2016matching}, to a maximum of ten examples per class. During test time, a small support set is sampled from new, previously unseen targets, and the model uses these few data points to generalise query molecules' activity against this new target \cite{vinyals2016matching}. Figure~\ref{fig:tox21metalearning} shows an example of a typical meta-learning scenario on the Tox21 dataset \citep{huang2016tox21challenge}, where data from a set of assays reserved for training are used to train a model. This model is subsequently used to generalise for a previously unseen assay using only a small support set from this new assay. We highlight that few-shot learning in this problem domain differs from other domains, such as computer vision, where a model is trained to recognise new classes. For example, given a few images of a lion, a class unseen during training, as the support set, the model must generalise for new images of a lion. In the domain under study, the challenge is to train a model that can generalise for the behaviour of molecules in experimental assays which are related but not identical to the assays in the training collection, using only a small support set from these new experimental assays. The molecules used during testing can thus be previously seen during training, but only in the context of their activity for different, but related experimental assays. Given a few molecules from new experimental assays, can the model predict the activity of molecules in this new assay using molecular data for different but related targets as training data?
+
+Molecules are complex structures consisting of atoms and bonds which must be somehow represented in computational space. The classical notation of compounds is the empirical formula such as $C_3H_7NO_2$. However, this can refer to alanine, sarcosine, or lactamide as empirical formulae hold no information on a molecule's topology. Molecular representations such as Extended-Connectivity Fingerprints (ECFP) \cite{rogers2010extended}, and graph convolution learned embeddings \cite{duvenaud2015convolutional} embed more information than the empirical formula on the properties of the molecule. This study mainly explores using graphs as embeddings for the low-data machine learning networks.
+
+A graph $G$ is a natural representation of a molecule, where nodes and edges represent atoms and bonds, respectively. When representing molecules, the set of vertices or nodes \textit{V} intuitively refers to atoms within a molecule, while the set of edges \textit{E} refers to the bonds that connect two atoms; such that $\mathcal{G}=(\mathcal{V}, \mathcal{E})$. Graphs are 2D objects, so spatial properties of a molecule, such as bond angles and chirality, are not inherent to the data object but are instead encoded as node or edge attributes \cite{david2020molecular}. Embeddings of molecular graphs, augmented with atom feature information, can be learned using graph convolutional networks (GCNs). Selected properties such as atomic number, atom type, charge, and valences, among others, may be encoded in a node feature vector. \citet{wu2018moleculenet} report that learned embeddings could be of benefit over topological molecular representations such as ECFP.
+
+In this study, we explore the application of several few-shot learning architectures including, in chronological order, Siamese Networks \citep{koch2015siamese}, Matching Networks \citep{vinyals2016matching}, Prototypical Networks \citep{snell2017prototypical}, and Relation Networks \citep{sung2018learning}. This group of architectures all fall under the umbrella of metric-based meta-learning. In our study, we embed molecule representations using GCNs, and then use or learn a distance function over these embeddings. Effectively, metric-based learners seek to learn a relationship between the input embeddings in the task space. 
+
+\section{Related Work}
+
+Several successful research undertakings have exploited the low-data learning paradigm, especially in the computer-vision domain \cite{koch2015siamese, vinyals2016matching, snell2017prototypical, sung2018learning}. Learning from only a few examples is especially important in domains with a paucity of data. This inaccessibility could be attributed to privacy, safety, or ethical issues and other issues such as the time, resources and exorbitant costs associated with data acquisition. Learning with low-data can lead to less expensive data gathering, and reduced computational cost for learning \cite{wang2020generalizing}.
+
+Building on past work in the metric-based meta-learning sphere \cite{vinyals2016matching}, \citet{altae2017low} introduce a deep-learning architecture for few-shot learning in drug discovery, in which they propose the iterative refinement long short-term memory (IterRefLSTM). IterRefLSTM builds on the Matching Networks \cite{vinyals2016matching} by introducing iterative refinement of embeddings using Long-Short Term Memory (LSTM) networks. In our research, we build on the work by \citet{altae2017low} and extend it by applying other successful few-shot learning approaches explored for other domains, such as the computer-vision domain. The authors employ Graph Convolutional Networks (GCN) to learn molecular embeddings, which are then fed into the low-data architectures for classification.
+
+\subsection{Graph Convolutional Networks}
+
+Molecules must be represented in computational space before processing them using few-shot machine learning techniques. \citet{wu2018moleculenet} report that graph-based models outperform conventional machine learning models on most datasets, suggesting that a learned embedding is advantageous over other molecular representations. Building on this rationale, we opt for graph learned molecular representations to embed the input molecules in this study. 
+
+Graph Convolutional Networks (GCNs) may be used to learn molecular representations \cite{jiang2021could}. Embeddings learned through neural networks afford the construction of automated features rather than fixed fingerprints. GCNs transform small molecules into real-valued vector representations, which are an effective way of processing small molecules via deep neural networks \cite{gomez2018automatic}. \citet{duvenaud2015convolutional} report that using a differentiable method reduces collisions of substructures, and the learned embedding can be optimised to contain relevant features such as biological activity and substructure information.
+
+If the graph object is our input signal, we can apply a set of operators to approximate the function we are attempting to learn. \citet{bronstein2021geometric} propose four key building blocks for deep learning on graphs, which include linear set equivariant layers, non-linear functions, local pooling layers, and set invariant layers. For graphs, the nodes $v$ are found on a domain $\Omega$ such that $v \in \Omega$. The nodes in $\Omega$ are stored in a feature space $C$, such that $C = \mathbb{R}^k$. Using a set of feature functions $X(\Omega, C)$, we can transform the feature space of the nodes in our domain. 
+
+In the equivariant layer $B$, we can take the nodes in our domain and apply a function that transforms the features of the nodes such that $X(\Omega, C) \rightarrow X(\Omega', C')$. Equivariance allows for a function $g$ to be applied before or after this layer, such that $B(g.x) = g.B(x)$. The non-linear activation functions can be applied element-wise on the features of the nodes in a graph, such that $(\sigma(x))(v) = \sigma(x(v))$. Local pooling layers can be used to apply coarsening to the graph such that $X(\Omega, C) \rightarrow X(\Omega', C)$, in which we can reduce the number of nodes in our domain such that $\Omega' \subseteq \Omega$. Finally, we have the invariant layer $Z$, which can also be referred to as a global pooling layer, in which $X(\Omega, C) \rightarrow y$, which satisfies the invariant condition such that $Z(g.x) = Z(x)$ \citep{bronstein2021geometric}. 
+\DIFdelbegin \DIFdel{Figure \ref{fig:neuralgraphfingerprint} illustrates an example of a GCN to learn a molecular embedding.
+}\DIFdelend 
+
+\DIFdelbegin %DIFDELCMD < \begin{figure}[h]
+%DIFDELCMD <     \centering
+%DIFDELCMD <     \includegraphics[width=0.9\linewidth]{img/graph_mol_embedding.png}
+%DIFDELCMD <     %%%
+%DIFDELCMD < \caption[Learned Embedding through a GCN]{%
+{%DIFAUXCMD
+\DIFdelFL{A typical pipeline for representing molecules using a learned embedding function, which can be processed further using feedforward neural networks as shown. Reproduced from \mbox{%DIFAUXCMD
+\citet{jiang2021could}}\hspace{0pt}%DIFAUXCMD
+.}}
+    %DIFAUXCMD
+%DIFDELCMD < \label{fig:neuralgraphfingerprint}
+%DIFDELCMD <   \end{figure}
+%DIFDELCMD < %%%
+\DIFdelend %DIF >  Figure \ref{fig:neuralgraphfingerprint} illustrates an example of a GCN to learn a molecular embedding.
+\DIFaddbegin 
+
+%DIF >  \begin{figure}[h]
+%DIF >      \centering
+%DIF >      \includegraphics[width=0.9\linewidth]{img/graph_mol_embedding.png}
+%DIF >      \caption[Learned Embedding through a GCN]{A typical pipeline for representing molecules using a learned embedding function, which can be processed further using feedforward neural networks as shown. Reproduced from \citet{jiang2021could}.}
+%DIF >      \label{fig:neuralgraphfingerprint}
+%DIF >    \end{figure}
+\DIFaddend 
+
+\subsection{Metric-based Few-Shot Learning}
+
+The success of a few-shot learning model for metric-based meta-learning is dependent on the effectiveness of a kernel $k_\theta$, which measures the similarity between data samples ${x..x_i}$ from a support set $S$ (see Equation \ref{kernel}) using a metric or distance function. The techniques employed in this study, excluding the benchmark model, use the support and query embeddings generated from the GCNs to learn the kernel function. We explore four few-shot learning models in this study, which are presented in the Methodology section. These include Siamese Networks, Matching Networks (upon which the state-of-the-art is developed), Prototypical Networks and Relation Networks. The two latter networks are new approaches for this problem domain and are mostly inspired by the computer vision domain.
+
+\begin{equation}
+    \label{kernel}
+    P_\theta(y \vert \mathbf{x}, S) = \sum_{(\mathbf{x}_i, y_i) \in S} k_\theta(\mathbf{x}, \mathbf{x}_i)y_i
+\end{equation}
+
+\subsubsection{Siamese Networks}
+
+Siamese networks \citep{koch2015siamese} are composed of two identical networks with shared weights and parameters, taking in a pair of data samples (molecules) as inputs. The distance between outputs from each component in the pair of networks is calculated to learn their relationship. The \DIFdelbegin \DIFdel{following is the process , repeated for all training tasks, employed }\DIFdelend \DIFaddbegin \DIFadd{process }\DIFaddend for learning a classifier using Siamese Networks \DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{is visualised in Figure \ref{fig:siamesenetarchi} and is described as follows;
+}\DIFaddend 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/high-level siamese.png}
+    \caption[High-level schematic of Siamese network]{High-level schematic of a Siamese network for the molecular network.}
+    \label{fig:siamesenetarchi}
+\end{figure}
+
+\begin{enumerate}
+    \item Generate a list of all possible pairs between training data. If both data samples in the pair have the same target, the pair's label is set to one and zero if otherwise.
+    \item Create a twin network using the GCN architecture to embed two molecular graph inputs into latent space.
+    \item Calculate the L1 distance between the molecule embeddings. 
+    \item The distance between the two embeddings is passed through a linear feedforward layer, followed by a sigmoid function to output the probability that the two molecules belong to the same class.
+    \item The binary cross-entropy loss is calculated and backpropagated through the network.
+\end{enumerate}
+
+\subsubsection{Matching Networks}
+
+The Matching Networks architecture builds on Siamese Networks. However, instead of learning a metric function over data pairs, the classifier learns how to define a probability distribution of output labels from query examples using a support set $S$. The classifier outputs a sum of attention-weighted labels from the support set to predict the similarity between the query and the support set samples. We use the same embedding function for the support and query sets to compute the molecular embeddings. Subsequently, the cosine similarity of pairs of data points between the support and query sets is computed, which is then normalised by a softmax function. The attention mechanism $a$ in $\hat{y} = \sum_{i=1}^{n} a(\hat{x}, x_i)y_i$ specifies how similar $\hat{x}$ is to each example $x$ in $S$.
+
+\begin{figure}[!ht]
+    \centering
+    \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.7\linewidth]{img/matching_networks.png}
+%DIFDELCMD <     %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.7\linewidth]{img/matching_networks_adapt.png}
+    \DIFaddendFL \caption[Matching Networks Architecture]{Matching Networks Architecture. \DIFdelbeginFL \DIFdelFL{Reproduced }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adapted }\DIFaddendFL from \citet{vinyals2016matching}.}
+    \label{fig:matchingnets}
+\end{figure}
+
+Figure~\ref{fig:matchingnets} illustrates the Matching Nets architecture. Embedding functions $f$ and $g$ are Convolutional Neural Networks (CNNs) \citep{lecun1995convolutional}, potentially being identical to each other, which project the inputs to the feature space. \citet{vinyals2016matching} also propose full context embedding functions, which take as input the whole support set with the element $x_i$, thus resulting in \( g(x_i, S) \). Full context embeddings effectively modify how the element is embedded with respect to the whole support set $S$. A bidirectional LSTM is used to encode $x_i$ in the context of the support set. Finally, the attention mechanism $a$, is the classifier which takes a softmax over the cosine distance of the embeddings. As proposed in \citet{vinyals2016matching}, fully contextual embeddings (FCE) are used in our implementation. Taking single data points to learn an embedding function limits the ability to embed the molecules effectively into latent space. Therefore, a bidirectional long-short term memory (LSTM) is used, which takes the whole support set as input to adjust the embedding based on the other support samples. $g_\theta(x_i, S)$ encodes $x_i$, a data sample from the support set, in the context of the whole support set $S$. The LSTM transforms our support set embeddings by adding the forward and backward activations to the original support image embeddings. Subsequently, $f_\theta(x, S)$, encodes the query sample $x$ and trains the LSTM with read attention over the support set. The hidden state is updated over ten processing ``read'' steps until, eventually, the hidden state is equivalent to the aforementioned $f_\theta(x, S)$. The hidden state and the output from the attention function are updated in each iteration. The cross-entropy loss is computed for each query prediction whilst training the model using stochastic gradient descent.
+
+\subsubsection{Prototypical Networks}
+
+Prototypical Networks \citep{snell2017prototypical} have similarities to Matching Networks, but instead of considering the individual support set embeddings, the mean vector of the embeddings (referred to as the \textit{prototype}) for each class within the support set is taken. Another improvement \citet{snell2017prototypical} make over Matching Networks is using Euclidean distance rather than the cosine distance to calculate the distances to classify the query (refer to Figure~\ref{fig:protonets}). In order to classify query data samples, the softmax of the Euclidean distance's inverse between each query and each prototype is taken. The negative log-likelihood is used to train the network through stochastic gradient descent
+
+\begin{figure}[!ht]
+    \centering
+    \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.7\linewidth]{img/protonets.png}
+%DIFDELCMD <     %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.7\linewidth]{img/ProtoNetsAdapt.png}
+    \DIFaddendFL \caption{Few-shot learning in Prototypical Networks, where prototypes \textbf{$c_k$} are taken as the mean of embedded support examples for each class. \DIFdelbeginFL \DIFdelFL{Reproduced }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adapted }\DIFaddendFL from \citet{snell2017prototypical}.}
+    \label{fig:protonets}
+\end{figure}
+
+\subsubsection{Relation Networks}
+
+\citet{sung2018learning} present the Relation Network, a framework for few-shot learning \DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{but one }\DIFaddend which could also be extended to zero-shot learning. The Relation Network learns a non-linear distance metric to compare support and query examples. Unlike previously mentioned networks, this network uses a feedforward neural network to learn a distance function in feature space. After embedding the support and query examples using an embedding function, each query example is concatenated with each feature map from the support set. The relationship between the queries and the different classes within the support set is captured by passing the feature map concatenations through a feed-forward neural network $g_\theta([x_i, x_j])$ to predict a relation score. The output class can be inferred from this relation score vector. $[\cdot,\cdot]$ is the concatenation between each support set data sample $x_i$ and the query data samples $x_j$. The Mean Squared Error (MSE) is used as the loss function, as proposed in the original paper. \DIFaddbegin \DIFadd{Figure \ref{fig:relationnets} illustrates the Relation Network architecture.
+}\DIFaddend 
+
+\begin{figure}[h]
+    \centering
+    \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.9\linewidth]{img/relation-nets.png}
+%DIFDELCMD <     %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.9\linewidth]{img/RelationNetAdapt.png}
+    \DIFaddendFL \caption[Relation Networks]{Few-shot learning scenario in Relation Networks for a \DIFdelbeginFL \DIFdelFL{5-way }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{4-way }\DIFaddendFL 1-shot learning task with one query as an example. \DIFdelbeginFL \DIFdelFL{Reproduced }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Adapted }\DIFaddendFL from \citet{sung2018learning}.}
+    \label{fig:relationnets}
+\end{figure}
+
+\subsection{Iterative Refinement LSTM}
+
+\citet{altae2017low} build on meta-learning concepts by training machine learning models on molecular data from a set of experimental assay targets (from the Tox21, SIDER, and MUV datasets) reserved for training. The model is then used to generalise for the activity of molecules in new, previously unseen experimental assays using only a small support set from these new assays. These test assays are related but not identical to the ones reserved for training. The number of molecules sampled for each class in the support set ranges from one to a maximum of ten molecules. The support and query molecules are embedded in their work using a graph convolutional network. Bond information and distinction between bond types was not considered in their study. We note that the \textit{pool} layers do not coarsen the graphs but only apply a max function over neighbouring nodes.
+
+\citet{altae2017low} propose the iterative refinement long-short term memory (IterRefLSTM) to further process the resulting embeddings in a few-shot machine learning pipeline. In IterRefLSTMs two embedding functions $f(\dot|S)$ and $g(\dot|S)$ are developed simultaneously. Therefore, the query embedding is built iteratively with that of the support set, using information from the two sets to enhance both the support and query embeddings. Once the embeddings have been iteratively refined, the authors apply a metric-based function to classify the queries using the support set embeddings. To emulate the Matching Networks, the authors use the Cosine distance to compare embeddings. Figure \ref{fig:schematiconeshotdrug}\DIFaddbegin \footnote{\DIFadd{Accessed from: https://pubs.acs.org/doi/10.1021/acscentsci.6b00367 - Further permissions related to the material excerpted should be directed to the ACS.}} \DIFaddend illustrates a one-shot learning scenario encapsulating the concepts mentioned earlier.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/pandeschematic.png}
+    \caption[Schematic of one-shot learning in drug discovery]{Schematic of one-shot learning in drug discovery based on the Matching Network \citep{vinyals2016matching} architecture. Reproduced from \citet{altae2017low}.}
+    \label{fig:schematiconeshotdrug}
+\end{figure}
+
+Their work is evaluated on the Tox21, the Side Effect Resource (SIDER) \citep{kuhn2016sider}, and MUV datasets\citep{rohrer2009maximum}. For every dataset, a subset of the targets is reserved for training and the rest for testing. Training is carried out as explained in the Matching Networks paper, in which training conditions match those at test time \citep{vinyals2016matching}. The authors use a Random Forest (RF) with 100 decision trees as a machine learning baseline model. They also utilise a conventional Graph Convolutional Networks (GCN) \citep{kipf2016semi} as an additional baseline model, which is trained using only a small support set from the test targets. They then experiment with Siamese Networks \citep{koch2015siamese}, Matching Networks \citep{vinyals2016matching}, and an adaptation of the Matching Networks by applying the iterative refinement concepts explained earlier.
+
+The authors utilise ROC-AUC scores to report the performance of the models. Considering the extreme imbalance of the data in the utilised datasets, favouring the negative (inactive/decoy) class, we note that the PR-AUC score would be a more appropriate evaluation measure. PR-AUC is based on the relationship between precision and recall, providing a clearer picture of how the model performs when predicting the \textit{positive} (active) class in the data. Correctly predicting the ``active'' class is of significant importance in virtual screening.
+
+On the Tox21 and SIDER datasets, their proposed machine learning architecture achieves good ROC-AUC performance. The mean score for 10-shot learning on the median held-out task on Tox21 achieves a score of $0.823 \pm 0.002$, while for one-shot learning, the model achieves a mean score of $0.827 \pm 0.001$. The reasons why one-shot learning achieved better performance than 10-shot learning is uncertain, as we expect the model to perform better with larger support sets. However, this might be attributed to variance in the data between experiments. On MUV data, the baseline machine learning models performed few-shot learning. The authors report that this is due to MUV data being maximally informative; therefore, structural similarity cannot be utilised to generalise activity prediction. The authors open-sourced their models in the DeepChem library\citep{ramsundar2019deep}. However, the implementations are now outdated and we were unable to train and test these models using the provided scripts. However, we study the open-sourced implementation and the respective details in the original literature to reproduce their work successfully.
+
+\section{Methodology}
+
+Building on the work of \citet{altae2017low}, we implement a Random Forest and a GCN as benchmark models. Additionally, we implement four few-shot machine learning architectures: Siamese Networks, Matching Networks, Prototypical Networks, and Relation Networks. IterRefLSTMs \citep{altae2017low}, used in the state-of-the-art, are used to enrich the resulting embeddings in latent space. Molecules are represented as graph objects and subsequently processed using GCNs to produce a vectorised embedding in computational space. We try to follow the implementation of \citet{altae2017low} as closely as possible for reproducibility and homogenising of results for effective comparison.
+
+\subsection{Machine Learning Pipeline}
+
+The machine learning pipeline for this study consists of nine main parts, which are illustrated in Figure~\ref{fig:architecture-schematic} and described hereunder:
+
+\begin{enumerate}
+    \item \textbf{Data Acquisition}. We utilise three main publicly available datasets for this study, namely, Tox21, MUV, and the GPCR subset of DUD-E. The latter is a new contribution to the study by \citet{altae2017low}. All data is available as SMILES strings with a flag for the experimental assays in the dataset recording whether the molecule is active or an inactive/decoy.
+
+    \item \textbf{Standardise molecule}. The SMILES strings are first standardised to transform all molecular representations according to a set of well-defined and consistent rules and conventions to ensure validity and uniformity.
+
+    \item \textbf{Molecular features generation}. The molecular graph generated from the standardised SMILES representation is enriched with atom descriptors to add information to the molecular representation.
+
+    \item \textbf{Molecular graphs generation}. The molecular representations are transformed into graph objects, consisting of nodes and edges representing atoms and bonds, respectively. The connectivity between atoms is represented via an adjacency matrix.
+
+    \item \textbf{Episode generation}. Effective few-shot learning necessitates that conditions at training match those at testing \citep{vinyals2016matching}. Therefore, $N$-way $K$-shot support sets and queries are randomly sampled to form a series of episodes for training. $K$ in each support set is constrained between one and ten examples per class. For every episode, we have two classes, the active class and the inactive/decoy class. A subset of experimental assays in each dataset is reserved for training, while the rest are reserved for testing.
+
+    \item \textbf{Learning a molecular embedding}. The sampled molecules from the current experimental assay are used to learn a molecular embedding using GCNs.
+
+    \item \textbf{Few-Shot Learning}. The learned embeddings are processed using four different meta-learning architectures: Siamese, Matching, Prototypical and Relation Networks. IterRefLSTMs \citep{altae2017low} are used to enrich the model.  
+
+    \item \textbf{Testing}. The trained models are subsequently used to test on new experimental assays, previously unseen during training, to gauge the generalising capability of a model trained for a low-data scenario. Support sets are randomly sampled and trained on the remaining molecules in the dataset for 20 rounds. The mean and standard deviation of the areas under the curve for Precision-Recall (PR-AUC) and Receiver Operator Characteristic (ROC-AUC) are calculated to quantify performance.
+
+    \item \textbf{Evaluation}. Finally, we evaluate the results based on the ROC-AUC and PR-AUC scores from the 20 test rounds. We apply statistical analysis for results obtained across different experiments to determine the best-performing techniques for each support set composition. Confusion matrices, ROC-AUC and PR-AUC graphs for the experiment with the median ROC-AUC score from the 20 rounds are generated after test completion.
+\end{enumerate}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/architecture-schematic.png}
+    \caption[Schematic of the major parts in our architecture]{Schematic of the machine learning pipeline designed for this study. The changes across few-shot learning architectures lie in the `Train Few-Shot Learning Model' component. Otherwise, all other modules remain identical. Figure \ref{fig:schematiconeshotdrug} visualises the GCN learned embedding as \textit{g}' and \textit{f}', and the few-shot learning steps as \textit{g, f, k}.}
+    \label{fig:architecture-schematic}
+\end{figure}
+
+\subsection{Datasets}
+
+In this work, we make use of the following three datasets;
+
+\begin{itemize}
+
+    \item \textbf{Tox21} \citep{huang2016tox21challenge} -- Mainly used for lead optimisation, containing toxicity data for 12 targets \citep{tox21}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: \url{https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz}. Last Accessed: 26/09/2022} in CSV format. The NR-AR, NR-AR-LBD, NR-AhR, NR-Aromatase, NR-ER, NR-ER-LBD, NR-PPAR-gamma, SR-ARE, SR-ATAD5 targets are reserved for training, and the remaining SR-HSE, SR-MMP, SR-p53 targets are used for testing.
+
+    \item \textbf{Maximum Unbiased Validation (MUV)} \citep{rohrer2009maximum} -- Based on PubChem BioAssays, used for validating virtual screening techniques against 17 different targets \citep{rohrer2009maximum}. The dataset was obtained from the DeepChem AWS bucket\footnote{Accessed from: \url{https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/muv.csv.gz}. Last Accessed: 26/09/2022} in CSV format. A total of 12 targets (MUV-466, MUV-548, MUV-600, MUV-644, MUV-652, MUV-689, MUV-692, MUV-712, MUV-713, MUV-733, MUV-737, and MUV-810) are reserved for training, while MUV-832, MUV-846, MUV-852, MUV-858, and MUV-859 are reserved for testing.
+
+    \item \textbf{Directory of Useful Decoys (Enhanced) (DUD-E)} \cite{mysinger2012directory} -- Used for benchmarking virtual screening techniques by providing active compounds against specific protein targets. Many \textit{decoys} with similar physical properties but different topologies are made available for each active molecule. We used the GPCR subset of the DUD-E dataset \citep{mysinger2012directory} for this research study. The data was obtained directly from the DUD-E website.\footnote{Accessed from: \url{http://dude.docking.org/subsets/gpcr}. Last Accessed: 26/09/2022} The AA2AR, DRD3, and ADRB1 targets are used for training. Two targets, ADRB2 and CXCR4, are reserved for testing. We note that this is an additional contribution to the study from \citet{altae2017low}.
+\end{itemize}
+
+Table~\ref{table:datasetimbalance} shows the excessive imbalance of these datasets, highlighting the scarceness of data on active compounds in this domain. Due to this class imbalance, we also report PR-AUC metrics in addition to the ROC-AUC metrics presented in the study by \citet{altae2017low}.
+
+\begin{table}[h]
+    \centering
+    \caption{Number of actives and inactives/decoys across all targets in the datasets used. Figures in parentheses show the percentage of the total compounds in the dataset.}
+    \begin{tabular}{@{}crr@{}}
+        \hline
+        Dataset         & Actives           & Inactives/Decoys \\
+        \hline
+        Tox21           & 4,149 (7.04\%)    & 54,746 (92.96\%) \\
+        MUV             & 347 (0.20\%)      & 175,990 (99.80\%) \\
+        DUD-E (GPCR)    & 1,249 (1.45\%)    & 84,856 (98.55\%) \\
+        \hline              
+    \end{tabular}
+    \label{table:datasetimbalance}
+\end{table}
+
+\subsection{Molecular Representations}
+
+We first standardise the molecules according to well-defined and consistent rules and conventions. Maintaining uniformity and integrity across the different data is of utmost importance. \citet{bento2020open} present an open source chemical structure curation pipeline based on RDKit\citep{rdkit} for validating and standardising chemical structures, which follow FDA/IUPAC guidelines \citep{brecher2006graphical, food2007substance}. Their work is available in the ChEMBL Structure Pipeline package \citep{bento2020open} and is used to standardise the molecules in our pipeline. 
+
+We create a molecular graph from the SMILES string of the standardised molecule using RDKit, an open-source toolkit for cheminformatics. We then one-hot encode eight atom features in each molecule: atom type, atomic number, atom degree, explicit valence, hybridisation, formal charge, number of radical electrons, and aromaticity. Self-loops are added to every node in the generated graph, so aggregation functions during message passing consider the features of the node itself. The order of the atoms follows the canonical order of the atoms assigned through RDKit. We make use of the Deep Graph Library (DGL) LifeSci \cite{dgllife} library to create the graph objects and subsequently process them using the DGL library \cite{wang2019dgl}.
+
+\subsection{Episodic Learning}
+
+Training for few-shot learning is carried out in a series of episodes, as shown in Figure \ref{fig:architecture-schematic}. We consider $N$-way $K$-shot classification tasks for each episode, where the support set contains \textit{N} classes and \textit{K} labelled molecules. The tasks in our research are binary classification tasks. Therefore \textit{N} is always set to two to represent the active and the inactive/decoy class, respectively. Experiments with varying values of \textit{K} are carried out to generate the support sets, with a minimum of one data point, to a maximum of ten data points (molecules) per class. The combinations for \textit{K} active and inactive/decoy classes are not exhaustive, but we follow the support set composition used in \citet{altae2017low} to compare our results with their study directly.
+
+Table~\ref{table:support-set-sizes} contains the composition of the support sets used in our experiments. For each episode, we sample a total of 128 query molecules composed of a balanced combination of molecules from each class. If the active class for a specific target contains less than 64 molecules, the active molecules are over-sampled such that each query set contains 64 actives. The choice of the support set composition was based on the methodology presented in \citet{altae2017low}.
+
+\begin{table}
+    \centering
+    \begin{tabular}{@{}rrr@{}}
+        \hline
+        Actives & Inactives/Decoys & Support Set Size \\
+        \hline
+        10  & 10 & 20 \\
+        5   & 10 & 15 \\
+        1   & 10 & 11 \\
+        1   & 5  & 6 \\
+        1   & 1  & 2 \\
+        \hline
+    \end{tabular}
+    \caption{Support set composition}
+    \label{table:support-set-sizes}
+\end{table}
+
+\subsection{Machine Learning Models}
+
+Before processing the molecular graph, the model first learns an embedding using GCNs. Four different architectures, including Siamese, Matching, Prototypical and Relation Networks, subsequently process the learned graph embeddings to train our meta-learner.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/DVGCNArchi.png}
+    \caption{Learning an embedding through a Graph Convolutional Network (GCN). The molecule, represented as a graph object with nodes, edges, and atom features, is processed using graph convolutions. A max message-passing function over the current and neighbouring nodes follows each convolution layer. After this process, a sum readout aggregates all atom features into one vector. A tanh function activates this vector, and a dense linear layer processes the output vector. A non-linear tanh function activates this vector to yield the final learned molecular embedding.}
+    \label{fig:dvgcnarchi}
+\end{figure}
+
+\subsubsection{Graph Convolutional Networks}
+
+Graph convolutional networks (GCNs) are used to learn embeddings for the support and query molecules in latent space. The SMILES molecules are first converted to graph representations and later embedded as vectors in latent space using GCNs and a final dense neural network. Figure~\ref{fig:dvgcnarchi} illustrates the GCN pipeline to learn a molecular embedding. Our study uses the convolutional operator from \citet{kipf2016semi} to process graphs and learn molecular embeddings. Back-propagation occurs throughout the whole few-shot learning process, which includes the GCNs. The assays used in testing are unseen during training. However, the molecules used in testing can be encountered during training but for different experimental assays. Since they are included in the same dataset (e.g.\ Tox21 data), these assays are related but not identical.
+
+\begin{equation}
+    \label{gcnequation2}
+    h_i^{(l+1)} = \sigma(b^{(l)} + \sum_{j\in\mathcal{N}(i)}\frac{1}{c_{ji}}h_j^{(l)}W^{(l)})
+\end{equation}
+
+The convolutional layer can be mathematically defined through Equation~\ref{gcnequation2}. $h_j$ is the feature set of the node, $N_i$ is the set of neighbouring nodes $i$, $b$ is the learnable bias, and $c_ji$ is the product of the square root of node degrees. From a message-passing perspective, this can be summarised into the following steps for every node feature space $u$;
+
+\begin{enumerate}
+    \item Aggregating the neighbouring representations $h_v$, producing an intermediate representation $\hat{h}_u$.
+    \item Transforming $\hat{h}_u$ through a linear projection and a non-linearity function such that $h_u = f(W_u \hat{h}_u)$. \citep{kipf2016semi}
+\end{enumerate}
+
+Three convolutional layers are present in our architecture, after which a maximum function aggregating the node features with the maximum value of the neighbours and the node itself is applied. We highlight that this is not a coarsening operation, as the number of nodes remains the same. Finally, we apply a global pooling layer (readout), in which we sum over the node features of every node in the graph (see Equation~\ref{gcnequationsum}). 
+
+\begin{equation}
+    \label{gcnequationsum}
+    r^{(i)} = \sum_{k=1}^{N_i} x^{(i)}_k
+\end{equation}
+
+A linear transformation is applied to the output from the readout layer, followed by a non-linear activation function, which uses a hyperbolic tangent function (tanh), outputting the final molecule embedding. Table \ref{table:gcn-architecture} contains the architecture utilised for the GCN in this study, and is illustrated in Figure~\ref{fig:dvgcnarchi}.
+
+\begin{table}
+    \centering
+    \begin{tabular}{@{}lrrl@{}}
+    \hline
+    \textbf{Layer Type} & \textbf{Input Dimension} & \textbf{Output Dimension} & \textbf{Non-Linearity} \\
+    \hline
+    GraphConv & 177 & 64 & ReLU \\
+    Max Pooling & 64 & 64 & \\
+    GraphConv & 64 & 128 & ReLU \\
+    Max Pooling & 128 & 128 & \\
+    GraphConv & 128 & 64 & ReLU \\
+    Max Pooling & 64 & 64 & \\
+    SumPool Readout & 64 & 64 & tanh \\
+    Linear & 64 & 128 & tanh \\
+    \hline  
+    \end{tabular}
+    \caption{Graph Convolution Network Architecture}
+    \label{table:gcn-architecture}
+\end{table}
+
+\subsubsection{Benchmark Models}
+
+We use a Random Forest model with 100 decision trees and a Graph Convolutional Network (GCN) to build a baseline to benchmark the purpose-built few-shot learning models. The Random Forest model uses ECFP representations of the molecules of size 2,048 bits for the classification task, using a radius of two. Meanwhile, the same GCN architecture used for the few-shot learning models is used for our benchmark. The designated architecture for the graph convolution network is outlined in Table~\ref{table:benchmarkArchi}. The only addition to the architecture is a final linear, fully-connected layer that takes as input 128 features, which is the size of the embedding used for the experiments to follow. It outputs a feature of size one, onto which we apply a non-linear function, in this case, a Sigmoid function, to output the probabilities for a binary target (${0, 1}$). This binary target signifies whether the molecule belongs to the experimental assay's active or inactive/decoy class. These two benchmark models are trained on a small subset of molecules (1 to 10 molecules per class) in a particular target. The remaining molecules are used for testing, to predict the molecule's activity in the respective task. This methodology differs from the few-shot learning techniques since for the latter we reserve specific tasks (e.g.\ assays or protein targets) for training and others for testing. 
+
+We also perform a final benchmark test in retrospect by taking a random selection of query molecules from a test target, generating the ECFP with the same parameters as mentioned earlier and then calculating the Tanimoto distance to classify the remaining test molecules based on this distance. However, we find that this does not hold any significant predictive capability. 
+
+\begin{table}
+    \centering
+    \begin{tabular}{@{}lrrl@{}}
+    \hline
+    \textbf{Layer} & \textbf{Input Dimension} & \textbf{Output Dimension} & \textbf{Non-Linearity} \\
+    \hline
+    GraphConv   & 177   & 64    & Relu \\
+    Max Pooling & 64    & 64    &  \\
+    GraphConv   & 64    & 128   & Relu \\
+    Max Pooling & 64    & 64    &  \\
+    GraphConv   & 128   & 64    & Relu \\
+    Max Pooling & 64    & 64    &  \\
+    Sum Pooling & 64    & 64    & TanH \\
+    Linear      & 64    & 128   & TanH \\
+    Linear      & 128   & 1     & Sigmoid \\
+    \hline
+    \end{tabular}
+    \caption{Benchmark Neural Network for Few-Shot Learning}
+    \label{table:benchmarkArchi}
+\end{table}
+
+\subsubsection{Few-Shot Learning Models}
+
+The generated molecular embeddings from the GCN are used as inputs for the few-shot learning architectures. The models discussed in this section, excluding the benchmark model, use the embeddings generated from the GCN, grouped in support and query sets, to learn the kernel function. These models include Siamese Networks, Matching Networks, Prototypical Networks and Relation Networks. Table \ref{table:relation-neural-net} tabulates the network used to generate the relation score in the Relation Networks architecture. The GCN architecture remains unchanged in all experiments to compare the model's effectiveness objectively. Figure~\ref{fig:schematic-training} illustrates the rationale behind few-shot machine learning for this problem domain. The molecules used in training and testing can be shared; however, the target class information imparting activity in a specific experimental assay must be different. This separation entails that we present the machine learning model with information from previously unseen experimental assays during testing. For example, training can be done on molecular activity for nuclear receptor assays in Tox21 and then tested on the remaining assays, which would have never been seen during training.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/Schematic Training.png}
+    \caption{Schematic illustrating how the few-shot learning machine learning on a molecular dataset works. The same molecules can be used during training and testing; however, these molecules would impart different information based on the target or experimental assay. The targets used in testing are previously unseen, except for the few molecules sampled in the support set (S\textsubscript{1-3}), which are used to fine-tune the ML model and impart some information about Target D. Query molecule Q\textsubscript{1} is sampled from Target D to be predicted using the ML model.}
+    \label{fig:schematic-training}
+\end{figure}
+
+\begin{table*}[h]
+    \centering
+    \begin{tabular}{@{}lrrl@{}}
+    \hline
+    Layer Type & Input Dimension & Output Dimension & Non-Linearity \\
+    \hline
+    Linear  & 256   & 128   & ReLU \\
+    Linear  & 128   & 64    & ReLU \\
+    Linear  & 64    & 8     & ReLU \\
+    Linear  & 8     & 2     & Sigmoid \\
+    \hline
+    \end{tabular}
+    \caption{The architecture for generating the relation score using function $g_\theta$.}
+    \label{table:relation-neural-net}
+\end{table*}
+
+We reproduce the work of \citet{altae2017low} from scratch and apply the IterRefLSTM to the embeddings in all architectures to effectively compare our contribution to past work. Additionally, we also provide implementations for the Prototypical Networks and Relation Networks. All the experiments are run on Google Colaboratory, and all implementations are open-sourced on GitHub\footnote{Accessed From: \url{https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}}. As emphasised by \citet{vinyals2016matching} and \citet{snell2017prototypical}, training and testing conditions should match during few-shot learning. Therefore, the exact same number of actives and inactives/decoys that make up the support set to train the model is also used during testing. For example, if we train using 10-shot learning, testing is carried out with 10-shot support sets. We remind the reader that testing is carried out on a new, previously unseen target. After the support set has been sampled, the rest of the data for the target being tested is used as query data. This process is repeated 20 times, and the mean and standard deviation of the ROC-AUC and PR-AUC scores from these 20 rounds are reported as the final classification result.
+
+\subsubsection{Evaluation}
+
+The evaluation metrics we use are the Area Under Curve (AUC) of the Receiver Operating Characteristic (ROC) curve and the Precision-Recall Curve (PR-AUC). To determine our classifier's predictive power, we use the ROC Area Under Curve (AUC) (ROC-AUC) as this affords a more nuanced approach than the accuracy metric, providing visibility into thresholds one can utilise to ameliorate predictions. \citet{altae2017low} also report ROC-AUC results; however, we believe this metric alone does not adequately measure the performance of the machine learning models due to the highly imbalanced nature of the data at hand. In virtual screening, detecting rare events (equivalent to our minority active class) holds significant importance, as active compounds against a specific target should be identified from the compound database. However, we do not disregard the importance of correct classification of the majority inactive/decoy class, as this is also important for filtering out thousands of screened compounds. As the active class is the minority class, PR-AUC is used to evaluate how well the model can classify the active class.
+
+We apply statistical analysis to the ROC-AUC and PR-AUC scores from the 20 test rounds for each experiment to establish whether there are significant differences between the few-shot learning models. The scores are compared against the scores from the model that obtained the best result for the same conditions. Comparison of results between two models is carried out using the Mann-Whitney U-test, also referred to as the Wilcoxon rank sum test \citep{mann1947test}.
+
+\section{Implementation Details}
+
+The machine learning models were developed using Python 3.7. Most packages were installed using Pip 21.0.1; however, Conda 4.10.3 was also used to install packages not found on the Python Package Index (PyPi)\footnote{Accessed from: \url{https://pypi.org/}. Last Accessed: 26/09/2022}. Pip and conda are package management systems for Python, allowing users to install and run packages and their dependencies conveniently. The specific versions of each toolkit are specified in Table~\ref{tab:versions}.
+
+\begin{table}
+    \centering
+    \begin{tabular}{@{}lll@{}}
+        \hline
+        \textbf{Package} & \textbf{Version} & \textbf{Description} \\
+        \hline
+        PyTorch & 1.9.0 & Machine learning framework \\
+        Scikit-Learn & 1.0.1 & Machine Learning Library \\
+        Deep Graph Library (DGL) & 0.7.2 & Deep learning on graphs \\
+        DGL-LifeSci & 0.2.8 & Cheminformatics graph functions \\
+        RDKit & 2021.09.2 & Cheminformatics Toolkit \\
+        DeepChem & 2.6.0.dev & Cheminformatics Machine Learning \\
+        Pandas & 1.1.5 & Data manipulation and preparation \\
+        Numpy & 1.19.5 & Adds support for multi-dimensional arrays \\
+        ChemBL Structure Pipeline & 1.0.0 & Used to standardise molecules \\
+        NetworkX & 2.6.3 & Used to visualise graphs \\
+        TQDM & 4.59 & Progress bars library \\
+        SciPy & 1.7.1 & Statistical Analysis \\
+        \hline
+    \end{tabular}
+    \caption{Python libraries utilised for this project.}
+    \label{tab:versions}
+\end{table}
+
+All the experiments were run on Google Colaboratory\footnote{Accessed from: \url{https://colab.research.google.com/}. Last Accessed: 26/09/2022}, Colab in short, and this platform's details are specified in Table~\ref{tab:hardware}.
+
+\begin{table}
+    \centering
+    \begin{tabular}{@{}lll@{}}
+        \hline
+        \textbf{Type} & \textbf{Model} & \textbf{Details} \\
+        \hline
+        CPU & Intel (R) Xeon & 2.20~Ghz 4 Cores \\
+        GPU & Nvidia Tesla P100 & 16~GB using Cuda 11.1 \\
+        RAM & N/A & 25~GB \\
+        \hline
+    \end{tabular}
+    \caption{Hardware provisioned in Google Colab.}
+    \label{tab:hardware}
+\end{table}
+
+\section{Results}
+
+This section presents the few-shot model results for the three evaluation datasets, Tox21, MUV, and DUD-E. All three datasets are highly imbalanced, where the inactive/decoy molecules greatly outnumber the number of actives. This imbalance presents a challenging problem but proves that low-data machine learning is highly beneficial in this domain. We first present the work we reproduced from \citet{altae2017low}, which we also use to test on a subset of the DUD-E dataset. The reproduced work includes Siamese Networks \citep{koch2015siamese} and the Matching Networks \citep{vinyals2016matching} with the IterRefLSTM. The latter obtained the best results in \citet{altae2017low} and is referred to as the state-of-the-art in this study. Further building on the Matching Networks architecture by \citet{vinyals2016matching}, we present and discuss results for two newly proposed machine learning models in this domain. These machine learning models include the Prototypical \citep{snell2017prototypical} and Relation \citep{sung2018learning} Networks. These architectures have been previously explored for the computer vision domain but, to our knowledge, have never been applied to the drug discovery domain. Finally, we evaluate the results with the state-of-the-art, which is identified to be the work of \citet{altae2017low}.
+
+
+\subsection{Tox21}
+
+In line with the results reported by \citet{altae2017low}, the few-shot learning models on Tox21 outperform the benchmark models significantly. The Matching Networks with IterRefLSTM performs well and obtain the best ROC-AUC results in some experiments. Our few-shot learning architecture implementation is identical to the work of \citet{altae2017low}; however, slight variations in how the model learns could be present. Hence, we focus mainly on how our implementations performed against each other. The results from the Prototypical Networks (PNs) overall significantly outperform the results from the MNs (the state-of-the-art approach) based on statistical analysis (see Table~\ref{table:Tox21-mean}). Meanwhile, MNs and PNs, outperform Relation Networks (RNs) in both ROC-AUC and PR-AUC performance. 
+
+Results for one-shot learning do not provide a clear-cut choice between our implementations for MNs and PNs with the IterRefLSTM. This performance is expected due to the similarity in the architecture of these methods. In a one-shot learning scenario, MNs and PNs are conceptually similar. The main difference lies in the distance function used since for MNs we use the cosine distance, while for PNs, we use the Euclidean distance, as proposed in the original literature, which introduced these two techniques. They both achieve comparable performance on Tox21 targets for one-shot learning. The performance of MNs for this scenario is consistent with the state-of-the-art and for such a problematic scenario (i.e.\ learning with only one example from each class), results are promising. The \textit{prototypes} in PNs are a mean of all embeddings for each class in the support set. The Euclidean distance between \textit{prototypes} and each embedding from the query set is calculated to predict the query's activity. As in one-shot learning we only have one example per class, the \textit{prototypes} are equivalent to the embedding for each class, making this identical to the MNs. 
+
+One observation which can be made is that there is not a significant improvement in performance from one-shot learning to 10-shot learning. This consistency may be attributed to the methodology used for training. Few-shot learning conditions during training must match the ones during testing, but during training, we use a sequence of episodes, in which we match the few-shot conditions during testing in each episode. Having a sequence of episodes means that training sees many molecules, albeit in a few-shot scenario. Hence, the model itself may already be maximally informative due to the number of episodes it is exposed to. Thus, when we get to the testing stage, presenting one-shot or 10-shot support sets to fine-tune the model does not seem to make an impactful difference. Another possible explanation for the insignificant impact of the support sets size on the performance of the few-shot learning models is that there is an inherent bias across targets in the dataset which the methods are able to pick upon. If this is the case, it would warrant future research on the composition of the Tox21 dataset when used to evaluate Machine Learning models. 
+
+\begin{table}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for the Tox21 Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The reproduced results use our implementation of the MatchingNet architecture in \citet{altae2017low}. The actual values are tabulated in the supporting information document in Tables S1, S2, and S3.}
+    \centering
+    % \ra{1.3}
+    % {\renewcommand{\arraystretch}{1}}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{Tox21} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & 0.617 ± 0.060 & 0.620 ± 0.065 & 0.825 ± 0.043 & 0.824 ± 0.022 & \textbf{0.826 ± 0.034} & 0.814 ± 0.030 \\ & PR-AUC & 0.158 ± 0.102 & 0.150 ± 0.095 & 0.226 ± 0.107 & 0.367 ± 0.105 & \textbf{0.384 ± 0.105} & 0.360 ± 0.102\\
+            \hline
+            5+/10- & ROC-AUC & 0.602 ± 0.059 & 0.610 ± 0.062 & 0.828 ± 0.069 & \textbf{0.824 ± 0.033} & 0.823 ± 0.038 & 0.822 ± 0.023 \\ & PR-AUC & 0.148 ± 0.090 & 0.152 ± 0.094 & 0.190 ± 0.094 & 0.369 ± 0.110 & \textbf{0.388 ± 0.111} & 0.355 ± 0.104\\
+            \hline
+            1+/10- & ROC-AUC & 0.563 ± 0.068 & 0.558 ± 0.076 & \textbf{0.836 ± 0.138} & 0.822 ± 0.025 & 0.826 ± 0.032 & 0.814 ± 0.028 \\ & PR-AUC & 0.128 ± 0.084 & 0.126 ± 0.075 & 0.099 ± 0.093 & 0.301 ± 0.103 & \textbf{0.384 ± 0.096} & 0.325 ± 0.103\\
+            \hline
+            1+/5- & ROC-AUC & 0.534 ± 0.066 & 0.559 ± 0.090 & 0.807 ± 0.159 & \textbf{0.820 ± 0.033} & \textbf{0.820 ± 0.033} & 0.819 ± 0.023 \\ & PR-AUC & 0.112 ± 0.059 & 0.128 ± 0.080 & 0.106 ± 0.086 & 0.339 ± 0.115 & \textbf{0.362 ± 0.106} & 0.318 ± 0.108\\
+            \hline
+            1+/1- & ROC-AUC & 0.550 ± 0.061 & 0.548 ± 0.102 & 0.818 ± 0.075 & 0.819 ± 0.036 & \textbf{0.820 ± 0.030} & 0.813 ± 0.029 \\ & PR-AUC & 0.118 ± 0.068 & 0.123 ± 0.082 & 0.198 ± 0.102 & 0.352 ± 0.121 & \textbf{0.373 ± 0.102} & 0.342 ± 0.093\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:Tox21-mean}
+\end{table}
+
+\subsection{MUV}
+
+Each active in the MUV dataset is structurally distinct from the other, making each data sample maximally informative. Therefore, structural similarities cannot be exploited on unseen active molecules. Our results show that the few-shot learning techniques explored in this study are better suited for lead optimisation (such as toxicity information) rather than hit discovery, for which MUV is mostly designed. The baseline benchmark tests consistently outperformed few-shot learning techniques. \citet{altae2017low} report that the results obtained through the GCNs baseline also struggle in performance. However, our tests and statistical analysis show that this is not the case for all MUV targets. For most targets, there is no significant difference between the scores obtained through the RFs and GCNs baselines. RNs obtain the best ROC-AUC scores in one instance on the MUV-832 target when trained with a 1+/10- support set, obtaining a mean ROC-AUC score of $0.683 \pm 0.010$. However, this result is inconsistent, and the performance is only observed in this single instance. Other than this single instance, our results are consistent with the conclusion from the state-of-the-art that baseline machine learning outperforms few-shot machine learning techniques on the MUV dataset. The results for the MUV dataset are shown in Table~\ref{table:muv-mean}. 
+
+\begin{table}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for MUV Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The reproduced results use our implementation of the MatchingNet architecture in \citet{altae2017low}. The actual values are tabulated in the supporting information document in Tables S4, S5, S6, S7, and S8.}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{MUV} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & \textbf{0.728 ± 0.145} & 0.713 ± 0.133 & 0.562 ± 0.046 & 0.628 ± 0.096 & 0.599 ± 0.085 & 0.490 ± 0.071 \\ & PR-AUC & \textbf{0.066 ± 0.073} & 0.009 ± 0.012 & 0.001 ± 0.000 & 0.007 ± 0.010 & 0.003 ± 0.002 & 0.002 ± 0.001\\
+            \hline
+            5+/10- & ROC-AUC & \textbf{0.696 ± 0.132} & 0.666 ± 0.115 & 0.550 ± 0.054 & 0.516 ± 0.085 & 0.576 ± 0.055 & 0.502 ± 0.072 \\ & PR-AUC & \textbf{0.071 ± 0.076} & 0.015 ± 0.022 & 0.001 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002\\
+            \hline
+            1+/10- & ROC-AUC & 0.599 ± 0.104 & 0.585 ± 0.116 & \textbf{0.648 ± 0.158} & 0.492 ± 0.082 & 0.540 ± 0.053 & 0.547 ± 0.090 \\ & PR-AUC & \textbf{0.021 ± 0.032} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.003 ± 0.002 & 0.003 ± 0.002\\
+            \hline
+            1+/5- & ROC-AUC & 0.587 ± 0.106 & 0.585 ± 0.126 & \textbf{0.613 ± 0.179} & 0.461 ± 0.046 & 0.494 ± 0.050 & 0.500 ± 0.000 \\ & PR-AUC & \textbf{0.027 ± 0.040} & 0.006 ± 0.008 & 0.001 ± 0.002 & 0.002 ± 0.001 & 0.002 ± 0.001 & 0.002 ± 0.000\\
+            \hline
+            1+/1- & ROC-AUC & 0.573 ± 0.103 & 0.577 ± 0.147 & \textbf{0.620 ± 0.138} & 0.507 ± 0.037 & 0.505 ± 0.030 & 0.484 ± 0.060 \\ & PR-AUC & \textbf{0.022 ± 0.036} & 0.006 ± 0.007 & 0.004 ± 0.011 & 0.002 ± 0.000 & 0.003 ± 0.001 & 0.002 ± 0.001\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:muv-mean}
+\end{table}
+
+\subsection{GPCR subset of the DUD-E}
+
+The few-shot learning model trained on the ADRB2 target achieves stellar performance based on ROC-AUC and PR-AUC scores. The results are close to a perfect classifier, which raises concerns about the underlying data. We hypothesise that the underlying data contains an inherent bias, which is confirmed by further research on the matter. Some studies indicate that the DUD-E dataset has limited chemical space and bias from the decoy compound selection process \cite{smusz2013influence, wallach2018most}. \citet{chen2019hidden} investigate this further to establish the effect these characteristics have on CNN models. The authors conclude that there is analogue bias within the set of actives within the targets (intra-target analogue bias) and between the actives of different targets (inter-target analogue bias). They also provide evidence of bias in decoy selection through the selection criteria for decoys. Therefore, results obtained from the DUD-E dataset are inconclusive.
+
+On the other hand, for the decoys available for the CXCR4 target, the RF model excels and outperforms the few-shot learning models. The GCN benchmark model also performed significantly better than few-shot learning models, which implies a clear benefit of training on the same data from the target, as opposed to the few-shot learning models, which are trained on other targets instead. Having such mixed results on two different targets within the same subset of the dataset does not give us a conclusive picture of whether few-shot learning is effective on this dataset. The results for the GPCR subset of DUD-E are presented in Table~\ref{table:dude-mean}.
+
+\begin{table}
+    \caption{Mean ROC-AUC and PR-AUC Scores with standard deviation for ML Models for DUD-E GPCR Test Targets over 20 rounds of testing. The bold text illustrates the best-obtained value. The first column shows the composition of the support set. The reproduced results use our implementation of the MatchingNet architecture in \citet{altae2017low}. The actual values are tabulated in the supporting information document in Tables S9, and S10.}
+    \centering
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}cccccccc@{}}
+            \hline
+            \textbf{DUDE-GPCR} & \textbf{Metric} & \textbf{RF} & \textbf{Graph Conv} & \textbf{SiameseNet} & \textbf{MatchingNet} & \textbf{ProtoNet} & \textbf{RelationNet} \\
+            \hline
+            10+/10- & ROC-AUC & \textbf{0.982 ± 0.018} & 0.940 ± 0.039 & 0.784 ± 0.215 & 0.900 ± 0.102 & 0.816 ± 0.187 & 0.928 ± 0.008 \\ & PR-AUC & \textbf{0.872 ± 0.102} & 0.504 ± 0.225 & 0.489 ± 0.475 & 0.535 ± 0.451 & 0.552 ± 0.445 & 0.562 ± 0.020\\
+            \hline
+            5+/10- & ROC-AUC & \textbf{0.958 ± 0.023} & 0.901 ± 0.058 & 0.761 ± 0.238 & 0.845 ± 0.153 & 0.843 ± 0.181 & 0.850 ± 0.149 \\ & PR-AUC & \textbf{0.762 ± 0.119} & 0.428 ± 0.247 & 0.495 ± 0.465 & 0.506 ± 0.477 & 0.559 ± 0.439 & 0.523 ± 0.447\\
+            \hline
+            1+/10- & ROC-AUC & 0.854 ± 0.071 & 0.788 ± 0.098 & 0.759 ± 0.247 & \textbf{0.881 ± 0.119} & 0.841 ± 0.159 & 0.866 ± 0.132 \\ & PR-AUC & 0.360 ± 0.136 & 0.230 ± 0.176 & 0.474 ± 0.445 & 0.521 ± 0.455 & 0.504 ± 0.463 & \textbf{0.541 ± 0.433}\\
+            \hline
+            1+/5- & ROC-AUC & \textbf{0.858 ± 0.084} & 0.763 ± 0.087 & 0.759 ± 0.246 & 0.851 ± 0.155 & 0.793 ± 0.211 & 0.848 ± 0.149 \\ & PR-AUC & 0.378 ± 0.123 & 0.221 ± 0.153 & 0.482 ± 0.444 & 0.516 ± 0.438 & \textbf{0.519 ± 0.474} & 0.490 ± 0.427\\
+            \hline
+            1+/1- & ROC-AUC & 0.804 ± 0.108 & 0.710 ± 0.121 & 0.771 ± 0.228 & 0.795 ± 0.203 & \textbf{0.865 ± 0.133} & 0.747 ± 0.251 \\ & PR-AUC & 0.301 ± 0.168 & 0.116 ± 0.121 & 0.500 ± 0.417 & 0.511 ± 0.470 & \textbf{0.543 ± 0.439} & 0.500 ± 0.465\\
+            \hline
+        \end{tabular}
+    }
+    \label{table:dude-mean}
+\end{table}
+
+\subsection{Comparison with the State of the Art}
+
+We tabulate the ROC-AUC results obtained by \citet{altae2017low} in Table~\ref{table:Tox21-sota-ours} and compare them to the best results obtained from our implementations. The best network is selected using statistical analysis, comparing the results from 20 test rounds for each experiment across all the techniques employed. Instances in which we have more than one best network tabulated, such as the SR-MMP 10+/10- example in Table~\ref{table:Tox21-sota-ours}, indicate that we do not find any statistically significant difference between the results obtained from that specific technique. The PN architecture has the highest frequency of being identified as the best network on Tox21 data based on ROC-AUC scores. We remind the reader that while we also report the PR-AUC score from our experiments, this metric is not available in the study by \citet{altae2017low}, hence why the results reported in Table~\ref{table:Tox21-sota-ours} contain only ROC-AUC results. We highlight that Prototypical Networks consistently performed well based on PR-AUC metrics, obtaining the best scores throughout all Tox21 targets. Using statistical analysis, Matching Networks and Relation Networks also match the performance in some cases. The PR-AUC is used to determine how well the model predicts active compounds, as it is the ratio of true positives divided by the sum of true positives and false positives. Therefore, we firmly believe that in machine learning experiments for virtual screening, this metric should be used in addition to ROC-AUC scores. We attribute any improvement in ROC-AUC for Matching Networks in our implementation over the state-of-the-art to the featurisation of molecules and variability which might arise through machine learning. However, we reiterate that all results reported in this study are compared homogeneously using our implementations of all machine learning architectures.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+    \hline
+    \textbf{Target} & \textbf{Support Set} & \textbf{SOTA} & \textbf{SOTA ROC-AUC} & \textbf{Obtained ROC-AUC} & \textbf{Best Networks} \\
+    \hline  
+    SR-HSE & 10+/10- & MN & 0.772 ± 0.002 & \textbf{0.793 ± 0.002} & MN \\
+    SR-HSE & 5+/10- & MN & 0.771 ± 0.002 & \textbf{0.791 ± 0.003} & RN \\
+    SR-HSE & 1+/10- & MN & 0.671 ± 0.007 & \textbf{0.788 ± 0.001} & MN \\
+    SR-HSE & 1+/5- & MN & 0.729 ± 0.003 & \textbf{0.789 ± 0.001} & RN \\
+    SR-HSE & 1+/1- & MN & 0.767 ± 0.001 & \textbf{0.779 ± 0.007} & PN \\
+    SR-MMP & 10+/10- & MN & 0.838 ± 0.001 & \textbf{0.845 ± 0.015} & MN/PN/RN \\
+    SR-MMP & 5+/10- & MN & 0.847 ± 0.001 & \textbf{0.853 ± 0.007} & MN/PN \\
+    SR-MMP & 1+/10- & SN & 0.809 ± 0.020 & \textbf{0.849 ± 0.005} & PN \\
+    SR-MMP & 1+/5- & MN & 0.799 ± 0.002 & \textbf{0.853 ± 0.001} & MN \\
+    SR-MMP & 1+/1- & MN & 0.835 ± 0.001 & \textbf{0.851 ± 0.008} & MN \\
+    SR-p53 & 10+/10- & MN & 0.823 ± 0.002 & \textbf{0.850 ± 0.004} & PN \\
+    SR-p53 & 5+/10- & MN & 0.830 ± 0.001 & \textbf{0.852 ± 0.009} & PN \\
+    SR-p53 & 1+/10- & SN & 0.726 ± 0.173 & \textbf{0.848 ± 0.005} & PN \\
+    SR-p53 & 1+/5- & MN & 0.795 ± 0.005 & \textbf{0.840 ± 0.005} & PN \\
+    SR-p53 & 1+/1- & MN & 0.827 ± 0.001 & \textbf{0.838 ± 0.004} & MN \\
+    \hline  
+    \end{tabular}
+    \caption[Comparing our best ROC-AUC scores with the SOTA results on Tox21.]{Comparison of our best ROC-AUC scores against the state-of-the-art (SOTA) results from \citet{altae2017low} on the Tox21 dataset. Values are mean values with standard deviation over 20 rounds of testing. Best values are highlighted in bold text.}
+    \label{table:Tox21-sota-ours}
+\end{table}
+
+\subsection{ECFP vs Graph-Learned Embeddings}
+
+We also tested whether the molecular representation affects the performance in few-shot learning on Tox21 data. We only employ the Prototypical Networks architecture for this particular experiment, as these performed consistently well in our other experiments. ECFPs are based on the topology and atom descriptors, whereby the molecule is fragmented into local neighbourhoods and hashed into a vector. On the other hand, graph-learned embeddings are guided by gradient descent during training to produce a more relevant embedding in latent space for the molecule. A neural network was used to learn a differentiable molecular embedding, from the ECFP, of the same size (a vector of size 128) as the one produced by the GCN. The results obtained using a learned embedding from GCNs consistently outperform the ones in which an ECFP was used. The values obtained from these experiments are tabulated in the supporting information document in Table S11.
+
+\subsection{Training Times}
+
+From the results on the Tox21 dataset, MNs, PNs, and RNs obtain good predictive performance; however, it is evident from the presented result that the two latter networks are much faster to train on the same hardware. From our experiments on the three Tox21 targets, MNs and PNs obtained the most consistent results. As the decrease in training times is substantial, by over 150\% between MNs and both PNs and RNs, we believe this puts the latter two networks at an advantage. Faster training times allow a faster turnaround of results while requiring less intense use of computer hardware. This increase in efficiency also allows scientists to perform a more rigorous hyperparameter search on various datasets in a shorter time.
+
+\section{Conclusion}
+
+In this study, we explored if a machine learning model can \textit{learn how to learn} and generalise using only a few examples in the virtual screening domain. This study builds on the work from \citet{altae2017low}, who have set essential foundations for this domain. We reproduce their work effectively and provide deeper insights into the study by introducing PR-AUC reporting, in addition to the reported ROC-AUC scores in their study, to increase robustness against highly imbalanced data. We also introduce Prototypical Networks and Relation Networks, two new few-shot machine learning models, to this domain and compare results to the state-of-the-art.
+
+While performance varies across the datasets, this difference is consistent with the reported results from \citet{altae2017low}. The Prototypical Networks outperform all other machine learning models, including the state-of-the-art model, based on ROC-AUC and PR-AUC performance on the Tox21 dataset. Additionally, given the highly imbalanced nature of the data, our PR-AUC results provide more robust insights into the performance of the models. The state-of-the-art and Prototypical Networks perform significantly better than our implementation of Relation Networks. We also observe that Prototypical Networks achieve this improved performance with much faster training times than our implementation of the state-of-the-art. 
+
+Due to the nature of the data used, where active compounds per target are highly scarce and each compound is structurally distinct, MUV data does not provide enough information for the machine learning model to generalise effectively for few-shot learning. Results on the DUD-E GPCR subset are also inconclusive, and for these datasets, our baseline experiments using conventional machine learning techniques perform better. We conclude that Prototypical Networks offer better generalising capabilities for few-shot learning in ligand-based virtual screening, specifically for lead optimisation, than the Matching Networks component used in the state-of-the-art. However, this is dependent on the nature of the data used. Finally, we also observe that using learned embeddings through GCNs, as opposed to ECFPs, consistently results in better ROC-AUC and PR-AUC performances.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The "Acknowledgement" section can be given in all manuscript
+%% classes.  This should be given within the "acknowledgement"
+%% environment, which will make the correct section or running title.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{acknowledgement}
+
+This work is partially supported by the `\textit{Discovery of COVID-19 Inhibitors}' (DisCO) project. Project DisCO is financed by the Malta Council for Science \& Technology, for and on behalf of the Foundation for Science and Technology, through the Infectious Diseases Programme (grant agreement number: IDP.RD.2021-05).
+
+\end{acknowledgement}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The same is true for Supporting Information, which should use the
+%% suppinfo environment.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{suppinfo}
+
+We provide the ROC-AUC and PR-AUC results for each individual target used for testing in supporting information (\texttt{supporting\_information.pdf}).
+
+\end{suppinfo}
+
+
+\begin{datasoftware}
+
+All the data used for the validation of this study (Tox21, DUD-E, and MUV) is publicly available.  The models are implemented in the Python programming language using Jupyter Notebooks which are run directly in Google Colab.  The raw data and code is freely available at \url{https://github.com/danielvlla/Few-Shot-Learning-for-Low-Data-Drug-Discovery}, and is released under an MIT licence.
+
+\end{datasoftware}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The appropriate \bibliography command should be placed here.
+%% Notice that the class file automatically sets \bibliographystyle
+%% and also names the section correctly.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DIFdelbegin %DIFDELCMD < \bibliography{main.bib}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \providecommand{\latin}[1]{#1}
+\makeatletter
+\providecommand{\doi}
+  {\begingroup\let\do\@makeother\dospecials
+  \catcode\DIFadd{`\{=1 }\catcode\DIFadd{`\}=2 }\doi@aux}
+\providecommand{\doi@aux}[1]{\endgroup\texttt{#1}}
+\makeatother
+\providecommand*\mcitethebibliography{\thebibliography}
+\csname @ifundefined\endcsname{endmcitethebibliography}
+{\let\endmcitethebibliography\endthebibliography}{}
+%\csname \DIFadd{@ifundefined}\endcsname{endmcitethebibliography}
+%  {\let\endmcitethebibliography\endthebibliography}{}
+\begin{mcitethebibliography}{34}
+\providecommand*\natexlab[1]{#1}
+\providecommand*\mciteSetBstSublistMode[1]{}
+\providecommand*\mciteSetBstMaxWidthForm[2]{}
+\providecommand*\mciteBstWouldAddEndPuncttrue
+  {\def\EndOfBibitem{\unskip.}}
+\providecommand*\mciteBstWouldAddEndPunctfalse
+  {\let\EndOfBibitem\relax}
+\providecommand*\mciteSetBstMidEndSepPunct[3]{}
+\providecommand*\mciteSetBstSublistLabelBeginEnd[3]{}
+\providecommand*\EndOfBibitem{}
+\mciteSetBstSublistMode{f}
+\mciteSetBstMaxWidthForm{subitem}{(\alph{mcitesubitemcount})}
+\mciteSetBstSublistLabelBeginEnd
+  {\mcitemaxwidthsubitemform\space}
+  {\relax}
+  {\relax}
+
+\bibitem[Hughes \latin{et~al.}(2011)Hughes, Rees, Kalindjian, and
+  Philpott]{hughes2011principles}
+\DIFadd{Hughes,~J.~P.; Rees,~S.; Kalindjian,~S.~B.; Philpott,~K.~L. Principles of early
+  drug discovery. }\emph{\DIFadd{British journal of pharmacology}} \textbf{\DIFadd{2011}}\DIFadd{,
+  }\emph{\DIFadd{162}}\DIFadd{, 1239--1249}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Waring \latin{et~al.}(2015)Waring, Arrowsmith, Leach, Leeson,
+  Mandrell, Owen, Pairaudeau, Pennie, Pickett, Wang, \latin{et~al.}
+  others]{waring2015analysis}
+\DIFadd{Waring,~M.~J.; Arrowsmith,~J.; Leach,~A.~R.; Leeson,~P.~D.; Mandrell,~S.;
+  Owen,~R.~M.; Pairaudeau,~G.; Pennie,~W.~D.; Pickett,~S.~D.; Wang,~J.,
+  }\latin{et~al.}  \DIFadd{An analysis of the attrition of drug candidates from four
+  major pharmaceutical companies. }\emph{\DIFadd{Nature reviews Drug discovery}}
+  \textbf{\DIFadd{2015}}\DIFadd{, }\emph{\DIFadd{14}}\DIFadd{, 475--486}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Altae-Tran \latin{et~al.}(2017)Altae-Tran, Ramsundar, Pappu, and
+  Pande]{altae2017low}
+\DIFadd{Altae-Tran,~H.; Ramsundar,~B.; Pappu,~A.~S.; Pande,~V. Low data drug discovery
+  with one-shot learning. }\emph{\DIFadd{ACS central science}} \textbf{\DIFadd{2017}}\DIFadd{, }\emph{\DIFadd{3}}\DIFadd{,
+  283--293}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Koch \latin{et~al.}(2015)Koch, Zemel, Salakhutdinov, \latin{et~al.}
+  others]{koch2015siamese}
+\DIFadd{Koch,~G.; Zemel,~R.; Salakhutdinov,~R., }\latin{et~al.}  \DIFadd{Siamese neural networks
+  for one-shot image recognition. ICML deep learning workshop. 2015}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Vinyals \latin{et~al.}(2016)Vinyals, Blundell, Lillicrap, Wierstra,
+  \latin{et~al.} others]{vinyals2016matching}
+\DIFadd{Vinyals,~O.; Blundell,~C.; Lillicrap,~T.; Wierstra,~D., }\latin{et~al.}
+  \DIFadd{Matching networks for one shot learning. }\emph{\DIFadd{Advances in neural information
+  processing systems}} \textbf{\DIFadd{2016}}\DIFadd{, }\emph{\DIFadd{29}}\DIFadd{, 3630--3638}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Snell \latin{et~al.}(2017)Snell, Swersky, and
+  Zemel]{snell2017prototypical}
+\DIFadd{Snell,~J.; Swersky,~K.; Zemel,~R.~S. Prototypical networks for few-shot
+  learning. }\emph{\DIFadd{arXiv preprint arXiv:1703.05175}} \textbf{\DIFadd{2017}}\DIFadd{, }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Sung \latin{et~al.}(2018)Sung, Yang, Zhang, Xiang, Torr, and
+  Hospedales]{sung2018learning}
+\DIFadd{Sung,~F.; Yang,~Y.; Zhang,~L.; Xiang,~T.; Torr,~P.~H.; Hospedales,~T.~M.
+  Learning to compare: Relation network for few-shot learning. Proceedings of
+  the IEEE conference on computer vision and pattern recognition. 2018; pp
+  1199--1208}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Wang \latin{et~al.}(2020)Wang, Yao, Kwok, and
+  Ni]{wang2020generalizing}
+\DIFadd{Wang,~Y.; Yao,~Q.; Kwok,~J.~T.; Ni,~L.~M. Generalizing from a few examples: A
+  survey on few-shot learning. }\emph{\DIFadd{ACM Computing Surveys (CSUR)}}
+  \textbf{\DIFadd{2020}}\DIFadd{, }\emph{\DIFadd{53}}\DIFadd{, 1--34}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Huang \latin{et~al.}(2016)Huang, Xia, Nguyen, Zhao, Sakamuru, Zhao,
+  Shahane, Rossoshek, and Simeonov]{huang2016tox21challenge}
+\DIFadd{Huang,~R.; Xia,~M.; Nguyen,~D.-T.; Zhao,~T.; Sakamuru,~S.; Zhao,~J.;
+  Shahane,~S.~A.; Rossoshek,~A.; Simeonov,~A. Tox21Challenge to build
+  predictive models of nuclear receptor and stress response pathways as
+  mediated by exposure to environmental chemicals and drugs. }\emph{\DIFadd{Frontiers in
+  Environmental Science}} \textbf{\DIFadd{2016}}\DIFadd{, }\emph{\DIFadd{3}}\DIFadd{, 85}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Rogers and Hahn(2010)Rogers, and Hahn]{rogers2010extended}
+\DIFadd{Rogers,~D.; Hahn,~M. Extended-connectivity fingerprints. }\emph{\DIFadd{Journal of
+  chemical information and modeling}} \textbf{\DIFadd{2010}}\DIFadd{, }\emph{\DIFadd{50}}\DIFadd{, 742--754}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Duvenaud \latin{et~al.}(2015)Duvenaud, Maclaurin,
+  Aguilera-Iparraguirre, G{\'o}mez-Bombarelli, Hirzel, Aspuru-Guzik, and
+  Adams]{duvenaud2015convolutional}
+\DIFadd{Duvenaud,~D.; Maclaurin,~D.; Aguilera-Iparraguirre,~J.;
+  G}{\DIFadd{\'o}}\DIFadd{mez-Bombarelli,~R.; Hirzel,~T.; Aspuru-Guzik,~A.; Adams,~R.~P.
+  Convolutional networks on graphs for learning molecular fingerprints.
+  }\emph{\DIFadd{arXiv preprint arXiv:1509.09292}} \textbf{\DIFadd{2015}}\DIFadd{, }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[David \latin{et~al.}(2020)David, Thakkar, Mercado, and
+  Engkvist]{david2020molecular}
+\DIFadd{David,~L.; Thakkar,~A.; Mercado,~R.; Engkvist,~O. Molecular representations in
+  AI-driven drug discovery: a review and practical guide. }\emph{\DIFadd{Journal of
+  Cheminformatics}} \textbf{\DIFadd{2020}}\DIFadd{, }\emph{\DIFadd{12}}\DIFadd{, 1--22}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Wu \latin{et~al.}(2018)Wu, Ramsundar, Feinberg, Gomes, Geniesse,
+  Pappu, Leswing, and Pande]{wu2018moleculenet}
+\DIFadd{Wu,~Z.; Ramsundar,~B.; Feinberg,~E.~N.; Gomes,~J.; Geniesse,~C.; Pappu,~A.~S.;
+  Leswing,~K.; Pande,~V. MoleculeNet: a benchmark for molecular machine
+  learning. }\emph{\DIFadd{Chemical science}} \textbf{\DIFadd{2018}}\DIFadd{, }\emph{\DIFadd{9}}\DIFadd{, 513--530}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Jiang \latin{et~al.}(2021)Jiang, Wu, Hsieh, Chen, Liao, Wang, Shen,
+  Cao, Wu, and Hou]{jiang2021could}
+\DIFadd{Jiang,~D.; Wu,~Z.; Hsieh,~C.-Y.; Chen,~G.; Liao,~B.; Wang,~Z.; Shen,~C.;
+  Cao,~D.; Wu,~J.; Hou,~T. Could graph neural networks learn better molecular
+  representation for drug discovery? A comparison study of descriptor-based and
+  graph-based models. }\emph{\DIFadd{Journal of cheminformatics}} \textbf{\DIFadd{2021}}\DIFadd{,
+  }\emph{\DIFadd{13}}\DIFadd{, 1--23}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[G{\'o}mez-Bombarelli \latin{et~al.}(2018)G{\'o}mez-Bombarelli, Wei,
+  Duvenaud, Hern{\'a}ndez-Lobato, S{\'a}nchez-Lengeling, Sheberla,
+  Aguilera-Iparraguirre, Hirzel, Adams, and Aspuru-Guzik]{gomez2018automatic}
+\DIFadd{G}{\DIFadd{\'o}}\DIFadd{mez-Bombarelli,~R.; Wei,~J.~N.; Duvenaud,~D.;
+  Hern}{\DIFadd{\'a}}\DIFadd{ndez-Lobato,~J.~M.; S}{\DIFadd{\'a}}\DIFadd{nchez-Lengeling,~B.; Sheberla,~D.;
+  Aguilera-Iparraguirre,~J.; Hirzel,~T.~D.; Adams,~R.~P.; Aspuru-Guzik,~A.
+  Automatic chemical design using a data-driven continuous representation of
+  molecules. }\emph{\DIFadd{ACS central science}} \textbf{\DIFadd{2018}}\DIFadd{, }\emph{\DIFadd{4}}\DIFadd{, 268--276}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Bronstein \latin{et~al.}(2021)Bronstein, Bruna, Cohen, and
+  Veli{\v{c}}kovi{\'c}]{bronstein2021geometric}
+\DIFadd{Bronstein,~M.~M.; Bruna,~J.; Cohen,~T.; Veli}{\DIFadd{\v{c}}}\DIFadd{kovi}{\DIFadd{\'c}}\DIFadd{,~P. Geometric deep
+  learning: Grids, groups, graphs, geodesics, and gauges. }\emph{\DIFadd{arXiv preprint
+  arXiv:2104.13478}} \textbf{\DIFadd{2021}}\DIFadd{, }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[LeCun \latin{et~al.}(1995)LeCun, Bengio, \latin{et~al.}
+  others]{lecun1995convolutional}
+\DIFadd{LeCun,~Y.; Bengio,~Y., }\latin{et~al.}  \DIFadd{Convolutional networks for images,
+  speech, and time series. }\emph{\DIFadd{The handbook of brain theory and neural
+  networks}} \textbf{\DIFadd{1995}}\DIFadd{, }\emph{\DIFadd{3361}}\DIFadd{, 1995}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Kuhn \latin{et~al.}(2016)Kuhn, Letunic, Jensen, and
+  Bork]{kuhn2016sider}
+\DIFadd{Kuhn,~M.; Letunic,~I.; Jensen,~L.~J.; Bork,~P. The SIDER database of drugs and
+  side effects. }\emph{\DIFadd{Nucleic acids research}} \textbf{\DIFadd{2016}}\DIFadd{, }\emph{\DIFadd{44}}\DIFadd{,
+  D1075--D1079}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Rohrer and Baumann(2009)Rohrer, and Baumann]{rohrer2009maximum}
+\DIFadd{Rohrer,~S.~G.; Baumann,~K. Maximum unbiased validation (MUV) data sets for
+  virtual screening based on PubChem bioactivity data. }\emph{\DIFadd{Journal of
+  chemical information and modeling}} \textbf{\DIFadd{2009}}\DIFadd{, }\emph{\DIFadd{49}}\DIFadd{, 169--184}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Kipf and Welling(2016)Kipf, and Welling]{kipf2016semi}
+\DIFadd{Kipf,~T.~N.; Welling,~M. Semi-Supervised Classification with Graph
+  Convolutional Networks. }\emph{\DIFadd{arXiv preprint arXiv:1609.02907}} \textbf{\DIFadd{2016}}\DIFadd{,
+  }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Ramsundar \latin{et~al.}(2019)Ramsundar, Eastman, Walters, and
+  Pande]{ramsundar2019deep}
+\DIFadd{Ramsundar,~B.; Eastman,~P.; Walters,~P.; Pande,~V. }\emph{\DIFadd{Deep learning for the
+  life sciences: applying deep learning to genomics, microscopy, drug
+  discovery, and more}}\DIFadd{; " O'Reilly Media, Inc.", 2019}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[NIH(2014)]{tox21}
+\DIFadd{NIH, Tox21 Data Challenge 2014. 2014; Accessed on 20.08.2021}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Mysinger \latin{et~al.}(2012)Mysinger, Carchia, Irwin, and
+  Shoichet]{mysinger2012directory}
+\DIFadd{Mysinger,~M.~M.; Carchia,~M.; Irwin,~J.~J.; Shoichet,~B.~K. Directory of useful
+  decoys, enhanced (DUD-E): better ligands and decoys for better benchmarking.
+  }\emph{\DIFadd{Journal of medicinal chemistry}} \textbf{\DIFadd{2012}}\DIFadd{, }\emph{\DIFadd{55}}\DIFadd{,
+  6582--6594}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Bento \latin{et~al.}(2020)Bento, Hersey, F{\'e}lix, Landrum, Gaulton,
+  Atkinson, Bellis, De~Veij, and Leach]{bento2020open}
+\DIFadd{Bento,~A.~P.; Hersey,~A.; F}{\DIFadd{\'e}}\DIFadd{lix,~E.; Landrum,~G.; Gaulton,~A.;
+  Atkinson,~F.; Bellis,~L.~J.; De~Veij,~M.; Leach,~A.~R. An open source
+  chemical structure curation pipeline using RDKit. }\emph{\DIFadd{Journal of
+  Cheminformatics}} \textbf{\DIFadd{2020}}\DIFadd{, }\emph{\DIFadd{12}}\DIFadd{, 1--16}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[RDKit(2012)]{rdkit}
+\DIFadd{RDKit, Open-source cheminformatics. https://www.rdkit.org. 2012; Last Accessed
+  on 25/11/2021}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Brecher(2006)]{brecher2006graphical}
+\DIFadd{Brecher,~J. Graphical representation of stereochemical configuration (IUPAC
+  Recommendations 2006). }\emph{\DIFadd{Pure and applied chemistry}} \textbf{\DIFadd{2006}}\DIFadd{,
+  }\emph{\DIFadd{78}}\DIFadd{, 1897--1970}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Food and Administration(2007)Food, and
+  Administration]{food2007substance}
+\DIFadd{Food,~F.; Administration,~D. Substance Definition Manual. }\emph{\DIFadd{Standard
+  Operating Procedure, “Substance Definition Manual,” Version 5c}}
+  \textbf{\DIFadd{2007}}\DIFadd{, }\emph{\DIFadd{94}}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Mufei \latin{et~al.}(2021)Mufei, Jinjing, Jiajing, Wenxuan, Yangkang,
+  Yaxin, and George]{dgllife}
+\DIFadd{Mufei,~L.; Jinjing,~Z.; Jiajing,~H.; Wenxuan,~F.; Yangkang,~Z.; Yaxin,~G.;
+  George,~K. DGL-LifeSci: An Open-Source Toolkit for Deep Learning on Graphs in
+  Life Science. }\emph{\DIFadd{arXiv preprint arXiv:2106.14232}} \textbf{\DIFadd{2021}}\DIFadd{, }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Wang \latin{et~al.}(2019)Wang, Zheng, Ye, Gan, Li, Song, Zhou, Ma, Yu,
+  Gai, Xiao, He, Karypis, Li, and Zhang]{wang2019dgl}
+\DIFadd{Wang,~M.; Zheng,~D.; Ye,~Z.; Gan,~Q.; Li,~M.; Song,~X.; Zhou,~J.; Ma,~C.;
+  Yu,~L.; Gai,~Y.; Xiao,~T.; He,~T.; Karypis,~G.; Li,~J.; Zhang,~Z. Deep Graph
+  Library: A Graph-Centric, Highly-Performant Package for Graph Neural
+  Networks. }\emph{\DIFadd{arXiv preprint arXiv:1909.01315}} \textbf{\DIFadd{2019}}\DIFadd{, }\relax
+\mciteBstWouldAddEndPunctfalse
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Mann and Whitney(1947)Mann, and Whitney]{mann1947test}
+\DIFadd{Mann,~H.~B.; Whitney,~D.~R. On a test of whether one of two random variables is
+  stochastically larger than the other. }\emph{\DIFadd{The annals of mathematical
+  statistics}} \textbf{\DIFadd{1947}}\DIFadd{, 50--60}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Smusz \latin{et~al.}(2013)Smusz, Kurczab, and
+  Bojarski]{smusz2013influence}
+\DIFadd{Smusz,~S.; Kurczab,~R.; Bojarski,~A.~J. The influence of the inactives subset
+  generation on the performance of machine learning methods. }\emph{\DIFadd{Journal of
+  cheminformatics}} \textbf{\DIFadd{2013}}\DIFadd{, }\emph{\DIFadd{5}}\DIFadd{, 1--8}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Wallach and Heifets(2018)Wallach, and Heifets]{wallach2018most}
+\DIFadd{Wallach,~I.; Heifets,~A. Most ligand-based classification benchmarks reward
+  memorization rather than generalization. }\emph{\DIFadd{Journal of chemical
+  information and modeling}} \textbf{\DIFadd{2018}}\DIFadd{, }\emph{\DIFadd{58}}\DIFadd{, 916--932}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem[Chen \latin{et~al.}(2019)Chen, Cruz, Ramsey, Dickson, Duca, Hornak,
+  Koes, and Kurtzman]{chen2019hidden}
+\DIFadd{Chen,~L.; Cruz,~A.; Ramsey,~S.; Dickson,~C.~J.; Duca,~J.~S.; Hornak,~V.;
+  Koes,~D.~R.; Kurtzman,~T. Hidden bias in the DUD-E dataset leads to
+  misleading performance of deep learning in structure-based virtual screening.
+  }\emph{\DIFadd{PloS one}} \textbf{\DIFadd{2019}}\DIFadd{, }\emph{\DIFadd{14}}\DIFadd{, e0220113}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\end{mcitethebibliography}
+\DIFaddend 
+
+
+\pagebreak
+\section{For Table of Contents Only}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.95\linewidth]{img/For Table of Contents Only.png}
+%%	\caption{Table of Contents/Abstract Graphic for Article}
+\end{figure}
+
+
+\end{document}
